@@ -74,7 +74,9 @@ const Desc = styled.p`
 const Button = styled.button`
   padding: 10px;
   font-size: 20px;
-  background-color: transparent;
+  background-color: black;
+  color: white;
+  border: none;
   cursor: pointer;
 `;
 

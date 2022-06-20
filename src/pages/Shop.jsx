@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
@@ -33,6 +34,16 @@ const FilterSelect = styled.select`
 const FilterSelectOption = styled.option``;
 
 const Shop = () => {
+  const [filters, setFilters] = useState({});
+
+  const handleFilters = (e) => {
+    const value = e.target.value;
+    setFilters({
+      ...filters,
+      [e.target.name]: value,
+    });
+  };
+
   return (
     <Container>
       <Navbar />
@@ -40,15 +51,15 @@ const Shop = () => {
       <FilterContainer>
         <Filter>
           <FilterText>Filter products:</FilterText>
-          <FilterSelect>
+          <FilterSelect name="gender" onChange={handleFilters}>
             <FilterSelectOption disabled selected>
               Genders
             </FilterSelectOption>
-            <FilterSelectOption>MEN</FilterSelectOption>
-            <FilterSelectOption>WOMEN</FilterSelectOption>
-            <FilterSelectOption>KID</FilterSelectOption>
+            <FilterSelectOption value="MALE">MEN</FilterSelectOption>
+            <FilterSelectOption value="FEMALE">WOMEN</FilterSelectOption>
+            <FilterSelectOption value="KID">KID</FilterSelectOption>
           </FilterSelect>
-          <FilterSelect>
+          <FilterSelect name="category" onChange={handleFilters}>
             <FilterSelectOption disabled selected>
               Categories
             </FilterSelectOption>
@@ -57,6 +68,7 @@ const Shop = () => {
             <FilterSelectOption>option3</FilterSelectOption>
           </FilterSelect>
         </Filter>
+
         <Filter>
           <FilterText>Sort products:</FilterText>
           <FilterSelect>
