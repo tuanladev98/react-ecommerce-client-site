@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import {
   FavoriteBorderOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
-} from "@material-ui/icons";
+} from '@material-ui/icons';
 
 const Info = styled.div`
   opacity: 0;

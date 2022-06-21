@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@material-ui/icons";
-import styled from "styled-components";
+import { useState } from 'react';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@material-ui/icons';
+import styled from 'styled-components';
 
-import { slideItems } from "../assets/mock_data/slide_data";
+import { slideItems } from '../assets/mock_data/slide_data';
 
 const Container = styled.div`
   width: 100%;
@@ -23,8 +23,8 @@ const Arrow = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  left: ${(props) => props.direction === "left" && "10px"};
-  right: ${(props) => props.direction === "right" && "10px"};
+  left: ${(props) => props.direction === 'left' && '10px'};
+  right: ${(props) => props.direction === 'right' && '10px'};
   margin: auto;
   cursor: pointer;
   opacity: 0.7;
@@ -85,18 +85,18 @@ const Slider = () => {
   const [slideIndex, setSlideIndex] = useState(0);
 
   const handleArrowClick = (direction) => {
-    if (direction === "left") {
+    if (direction === 'left') {
       setSlideIndex(slideIndex > 0 ? slideIndex - 1 : maxSlideItems - 1);
     }
 
-    if (direction === "right") {
+    if (direction === 'right') {
       setSlideIndex(slideIndex < maxSlideItems - 1 ? slideIndex + 1 : 0);
     }
   };
 
   return (
     <Container>
-      <Arrow direction="left" onClick={() => handleArrowClick("left")}>
+      <Arrow direction="left" onClick={() => handleArrowClick('left')}>
         <ArrowLeftOutlined />
       </Arrow>
       <Wrapper slideIndex={slideIndex}>
@@ -113,7 +113,7 @@ const Slider = () => {
           </Slide>
         ))}
       </Wrapper>
-      <Arrow direction="right" onClick={() => handleArrowClick("right")}>
+      <Arrow direction="right" onClick={() => handleArrowClick('right')}>
         <ArrowRightOutlined />
       </Arrow>
     </Container>

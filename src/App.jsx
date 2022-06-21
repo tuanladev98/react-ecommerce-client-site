@@ -3,14 +3,14 @@ import {
   Switch,
   Route,
   Redirect,
-} from "react-router-dom";
+} from 'react-router-dom';
 
-import Cart from "./pages/Cart";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import ProductDetail from "./pages/ProductDetail";
-import Shop from "./pages/Shop";
-import Register from "./pages/Register";
+import Cart from './pages/Cart';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import ProductDetail from './pages/ProductDetail';
+import Shop from './pages/Shop';
+import Register from './pages/Register';
 
 const App = () => {
   const user = true;

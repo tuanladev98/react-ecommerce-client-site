@@ -6,8 +6,8 @@ import {
   Pinterest,
   Room,
   Twitter,
-} from "@material-ui/icons";
-import styled from "styled-components";
+} from '@material-ui/icons';
+import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
@@ -122,14 +122,14 @@ const Footer = () => {
       <Right>
         <Title>Contact</Title>
         <ContactItem>
-          <Room style={{ marginRight: "10px" }} /> 622 Dixie Path , South
+          <Room style={{ marginRight: '10px' }} /> 622 Dixie Path , South
           Tobinchester 98336
         </ContactItem>
         <ContactItem>
-          <Phone style={{ marginRight: "10px" }} /> +1 234 56 78
+          <Phone style={{ marginRight: '10px' }} /> +1 234 56 78
         </ContactItem>
         <ContactItem>
-          <MailOutline style={{ marginRight: "10px" }} /> contact@lama.dev
+          <MailOutline style={{ marginRight: '10px' }} /> contact@lama.dev
         </ContactItem>
         <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
       </Right>

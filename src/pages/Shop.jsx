@@ -1,9 +1,12 @@
-import { useState } from "react";
-import styled from "styled-components";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import Newsletter from "../components/Newsletter";
-import ProductList from "../components/ProductList";
+import { useState, useEffect } from 'react';
+import styled from 'styled-components';
+
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
+import Newsletter from '../components/Newsletter';
+import ProductList from '../components/ProductList';
+
+import categoryApis from '../api/category.api';
 
 const Container = styled.div``;
 
@@ -36,7 +39,13 @@ const FilterSelectOption = styled.option``;
 const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({});
-  const [sort, setSort] = useState("NEWEST");
+  const [sort, setSort] = useState('NEWEST');
+
+  useEffect(() => {
+    categoryApis.getAllCategory().then((result) => {
+      setCategories(result.data);
+    });
+  }, []);
 
   const handleFilters = (e) => {
     const value = e.target.value;
@@ -65,7 +74,7 @@ const Shop = () => {
             {categories.map((cat) => {
               return (
                 <FilterSelectOption value={cat.id} key={cat.id}>
-                  cat.categoryName
+                  {cat.categoryName}
                 </FilterSelectOption>
               );
             })}

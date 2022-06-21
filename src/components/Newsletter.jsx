@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Send } from "@material-ui/icons";
+import styled from 'styled-components';
+import { Send } from '@material-ui/icons';
 
 const Container = styled.div`
   height: 40vh;

@@ -1,20 +1,20 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const genders = [
   {
-    display: "MEN",
-    value: "MALE",
-    img: "https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/viVN/Images/running-ss22-4dfwd-x-parley-launch-hp-teaser-carousel-card-dual-2d-d_tcm337-820245.jpg",
+    display: 'MEN',
+    value: 'MALE',
+    img: 'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/viVN/Images/running-ss22-4dfwd-x-parley-launch-hp-teaser-carousel-card-dual-2d-d_tcm337-820245.jpg',
   },
   {
-    display: "WOMAN",
-    value: "FEMALE",
-    img: "https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/viVN/Images/adicolor-FW21-Oct-GLP-W-Teaser-Carousel-1-D-M-T_tcm337-730012.jpg",
+    display: 'WOMAN',
+    value: 'FEMALE',
+    img: 'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/viVN/Images/adicolor-FW21-Oct-GLP-W-Teaser-Carousel-1-D-M-T_tcm337-730012.jpg',
   },
   {
-    display: "KIDS",
-    value: "KID",
-    img: "https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/viVN/Images/SS18_YA_Running_Ecomm_AFC_Collection-Mobile_M_2_640x640-new_tcm337-244167.jpg",
+    display: 'KIDS',
+    value: 'KID',
+    img: 'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/viVN/Images/SS18_YA_Running_Ecomm_AFC_Collection-Mobile_M_2_640x640-new_tcm337-244167.jpg',
   },
 ];
 

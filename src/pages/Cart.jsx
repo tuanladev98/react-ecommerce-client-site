@@ -1,7 +1,7 @@
-import { Add, Remove } from "@material-ui/icons";
-import styled from "styled-components";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import { Add, Remove } from '@material-ui/icons';
+import styled from 'styled-components';
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 
 const Container = styled.div``;
 
@@ -25,10 +25,10 @@ const TopButton = styled.button`
   padding: 10px;
   font-weight: 600;
   cursor: pointer;
-  border: ${(props) => props.type === "filled" && "none"};
+  border: ${(props) => props.type === 'filled' && 'none'};
   background-color: ${(props) =>
-    props.type === "filled" ? "black" : "transparent"};
-  color: ${(props) => props.type === "filled" && "white"};
+    props.type === 'filled' ? 'black' : 'transparent'};
+  color: ${(props) => props.type === 'filled' && 'white'};
 `;
 
 const TopTexts = styled.div``;
@@ -127,8 +127,8 @@ const SummaryItem = styled.div`
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
-  font-weight: ${(props) => props.type === "total" && "500"};
-  font-size: ${(props) => props.type === "total" && "24px"};
+  font-weight: ${(props) => props.type === 'total' && '500'};
+  font-size: ${(props) => props.type === 'total' && '24px'};
 `;
 
 const SummaryItemText = styled.span``;

@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { Search, ShoppingCartOutlined } from "@material-ui/icons";
-import { Badge } from "@material-ui/core";
+import React from 'react';
+import styled from 'styled-components';
+import { Search, ShoppingCartOutlined } from '@material-ui/icons';
+import { Badge } from '@material-ui/core';
 
 const Container = styled.div`
   height: 90px;
@@ -78,7 +78,7 @@ const Navbar = () => {
           <Language>EN</Language>
           <SearchContainer>
             <Input placeholder="Search ..." />
-            <Search style={{ color: "gray", fontSize: "16px" }} />
+            <Search style={{ color: 'gray', fontSize: '16px' }} />
           </SearchContainer>
         </Left>
         <Center>
