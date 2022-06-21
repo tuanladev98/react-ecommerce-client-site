@@ -34,7 +34,9 @@ const FilterSelect = styled.select`
 const FilterSelectOption = styled.option``;
 
 const Shop = () => {
+  const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({});
+  const [sort, setSort] = useState("NEWEST");
 
   const handleFilters = (e) => {
     const value = e.target.value;
@@ -44,6 +46,11 @@ const Shop = () => {
     });
   };
 
+  const handleSort = (e) => {
+    const value = e.target.value;
+    setSort(value);
+  };
+
   return (
     <Container>
       <Navbar />
@@ -51,6 +58,19 @@ const Shop = () => {
       <FilterContainer>
         <Filter>
           <FilterText>Filter products:</FilterText>
+          <FilterSelect name="category" onChange={handleFilters}>
+            <FilterSelectOption disabled selected>
+              Categories
+            </FilterSelectOption>
+            {categories.map((cat) => {
+              return (
+                <FilterSelectOption value={cat.id} key={cat.id}>
+                  cat.categoryName
+                </FilterSelectOption>
+              );
+            })}
+          </FilterSelect>
+
           <FilterSelect name="gender" onChange={handleFilters}>
             <FilterSelectOption disabled selected>
               Genders
@@ -59,29 +79,25 @@ const Shop = () => {
             <FilterSelectOption value="FEMALE">WOMEN</FilterSelectOption>
             <FilterSelectOption value="KID">KID</FilterSelectOption>
           </FilterSelect>
-          <FilterSelect name="category" onChange={handleFilters}>
-            <FilterSelectOption disabled selected>
-              Categories
-            </FilterSelectOption>
-            <FilterSelectOption>option1</FilterSelectOption>
-            <FilterSelectOption>option2</FilterSelectOption>
-            <FilterSelectOption>option3</FilterSelectOption>
-          </FilterSelect>
         </Filter>
 
         <Filter>
           <FilterText>Sort products:</FilterText>
-          <FilterSelect>
+          <FilterSelect name="sort" onChange={handleSort}>
             <FilterSelectOption disabled selected>
               Sort
             </FilterSelectOption>
-            <FilterSelectOption>option1</FilterSelectOption>
-            <FilterSelectOption>option2</FilterSelectOption>
-            <FilterSelectOption>option3</FilterSelectOption>
+            <FilterSelectOption value="NEWEST">Newest</FilterSelectOption>
+            <FilterSelectOption value="PRICE_ASC">
+              Price (ASC)
+            </FilterSelectOption>
+            <FilterSelectOption value="PRICE_DESC">
+              Price (DESC)
+            </FilterSelectOption>
           </FilterSelect>
         </Filter>
       </FilterContainer>
-      <ProductList />
+      <ProductList filters={filters} sort={sort} />
       <Newsletter />
       <Footer />
     </Container>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import ProductCard from "./ProductCard";
 
@@ -41,11 +42,13 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const ProductList = () => {
+const ProductList = ({ filters, sort }) => {
+  const [products, setProducts] = useState([]);
+
   return (
     <Container>
-      {popularProducts.map((product, index) => (
-        <ProductCard data={product} key={index} />
+      {products.map((product) => (
+        <ProductCard data={product} key={product.id} />
       ))}
     </Container>
   );
