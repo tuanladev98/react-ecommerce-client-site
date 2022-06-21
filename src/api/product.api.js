@@ -1,16 +1,14 @@
 import axiosClient from './axios_client';
 
 const productApis = {
-  filterProduct: (categoryIds, genders, sizeIds) => {
-    const result = axiosClient.get('/product/filter', {
+  filterProduct: (categoryId, gender, sort) => {
+    return axiosClient.get('/product', {
       params: {
-        categoryIds,
-        genders,
-        sizeIds,
+        categoryId,
+        gender,
+        sort,
       },
     });
-
-    return result;
   },
 };
 

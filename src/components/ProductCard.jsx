@@ -65,11 +65,11 @@ const Icon = styled.div`
   }
 `;
 
-const ProductCard = ({ data }) => {
+const ProductCard = ({ productData }) => {
   return (
     <Container>
       <Circle />
-      <Image src={data.image01} />
+      <Image src={productData.image01} />
       <Info>
         <Icon>
           <ShoppingCartOutlined />

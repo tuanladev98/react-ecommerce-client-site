@@ -16,13 +16,17 @@ const ProductList = ({ filters, sort }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // productApis.filterProduct()
+    productApis
+      .filterProduct(filters.category, filters.gender, sort)
+      .then((result) => {
+        setProducts(result.data);
+      });
   }, [filters, sort]);
 
   return (
     <Container>
       {products.map((product) => (
-        <ProductCard data={product} key={product.id} />
+        <ProductCard productData={product} key={product.id} />
       ))}
     </Container>
   );
