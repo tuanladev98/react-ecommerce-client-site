@@ -10,6 +10,10 @@ const productApis = {
       },
     });
   },
+
+  getPopularProduct: () => {
+    return axiosClient.get('/product/popular');
+  }
 };
 
 export default productApis;
