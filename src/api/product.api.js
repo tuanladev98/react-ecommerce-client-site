@@ -1,8 +1,8 @@
-import axiosClient from './axios_client';
+import { createPublicRequest } from './axios_client';
 
 const productApis = {
   filterProduct: (categoryId, gender, sort) => {
-    return axiosClient.get('/product', {
+    return createPublicRequest.get('/product', {
       params: {
         categoryId,
         gender,
@@ -12,8 +12,12 @@ const productApis = {
   },
 
   getPopularProduct: () => {
-    return axiosClient.get('/product/popular');
-  }
+    return createPublicRequest.get('/product/popular');
+  },
+
+  getOne: (code) => {
+    return createPublicRequest.get(`/product/find/${code}`);
+  },
 };
 
 export default productApis;

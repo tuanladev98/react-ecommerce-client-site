@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const genders = [
@@ -72,7 +73,13 @@ const GenderBrand = () => {
           <Image src={gender.img} />
           <Info>
             <Title>{gender.display}</Title>
-            <Button>SHOW NOW</Button>
+            <Link
+              to={{
+                pathname: '/shop',
+              }}
+            >
+              <Button>SHOW NOW</Button>
+            </Link>
           </Info>
         </GenderItem>
       ))}

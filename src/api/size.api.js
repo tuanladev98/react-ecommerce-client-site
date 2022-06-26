@@ -1,8 +1,8 @@
-import axiosClient from './axios_client';
+import { createPublicRequest } from './axios_client';
 
 const sizeApis = {
   getAllSize: () => {
-    const result = axiosClient.get('/size');
+    const result = createPublicRequest.get('/size');
 
     return result;
   },

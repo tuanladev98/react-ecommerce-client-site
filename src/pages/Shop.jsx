@@ -84,6 +84,7 @@ const Shop = () => {
             <FilterSelectOption disabled selected>
               Genders
             </FilterSelectOption>
+            <FilterSelectOption value="ALL">ALL</FilterSelectOption>
             <FilterSelectOption value="MALE">MEN</FilterSelectOption>
             <FilterSelectOption value="FEMALE">WOMEN</FilterSelectOption>
             <FilterSelectOption value="KID">KID</FilterSelectOption>

@@ -1,8 +1,8 @@
-import axiosClient from './axios_client';
+import { createPublicRequest } from './axios_client';
 
 const categoryApis = {
   getAllCategory: () => {
-    const result = axiosClient.get('/category');
+    const result = createPublicRequest.get('/category');
 
     return result;
   },

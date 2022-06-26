@@ -1,8 +1,18 @@
 import { Add, Remove } from '@material-ui/icons';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import Newsletter from '../components/Newsletter';
+
+import productApis from '../api/product.api';
+import cartApis from '../api/cart.api';
+
+import { changeCartItems } from '../redux/cart_slice';
+import numberWithCommas from '../utils/numberWithCommas';
 
 const Container = styled.div``;
 
@@ -46,21 +56,41 @@ const ProductOptionsContainer = styled.div`
   justify-content: space-between;
 `;
 
-const Filter = styled.div`
-  display: flex;
-  align-items: center;
-`;
+const Filter = styled.div``;
 
 const FilterTitle = styled.span`
   font-size: 20px;
   font-weight: 200;
 `;
 
-const FilterSize = styled.select``;
+const FilterSize = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+`;
 
-const Size = styled.option``;
+const SizeOption = styled.div`
+  width: 45px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 0px 5px;
+  background-color: ${(props) => (props.isActive ? 'black' : 'white')};
+  color: ${(props) => (props.isActive ? 'white' : 'black')};
+  cursor: pointer;
 
-const AddContainer = styled.div`
+  &:hover {
+    background-color: black;
+    color: white;
+  }
+`;
+
+const AddToCartContainer = styled.div`
   width: 50%;
   display: flex;
   align-items: center;
@@ -100,40 +130,127 @@ const Button = styled.button`
 `;
 
 const ProductDetail = () => {
+  const location = useLocation();
+  const code = location.pathname.split('/')[2];
+  const [product, setProduct] = useState({
+    id: null,
+    code: '',
+    productName: '',
+    description: '',
+    price: 0,
+    gender: '',
+    image01: '',
+    image02: '',
+    isDelete: false,
+    categoryId: null,
+    availableSizes: [],
+  });
+  const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState(undefined);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // scroll to top on page load
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    productApis.getOne(code).then((result) => {
+      setProduct(result.data);
+    });
+  }, [code]);
+
+  const handleChangeQuantity = (type) => {
+    if (type === 'dec') {
+      quantity > 1 && setQuantity(quantity - 1);
+    }
+    if (type === 'inc') {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleAddToCart = () => {
+    // add item to cart
+    if (!product || !product.id) alert('Product not found!');
+    else if (!size) alert('Please choose size!');
+    else if (!quantity || quantity < 1) alert('Please choose quantity!');
+    else {
+      cartApis
+        .addItem(product.id, size.id, quantity)
+        .then((result) => {
+          dispatch(changeCartItems(result.data));
+        })
+        .catch((error) => {
+          const { statusCode, message } = error.response.data;
+          if (statusCode < 500) alert(message);
+          else alert('Something went wrong...');
+        });
+    }
+  };
+
   return (
     <Container>
       <Navbar />
+
       <Wrapper>
         <ImgContainer>
-          <Image src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/8129befd83a043678710adf5007bf1e7_9366/Giay_ZX_22_BOOST_trang_GY6695_01_standard.jpg" />
+          <Image src={product.image01} />
         </ImgContainer>
         <InfoContainer>
-          <Title>Adidas Title</Title>
+          <Title>{product.productName}</Title>
           <Desc>
             There are many variations of passages of Lorem Ipsum available, but
             the majority have suffered alteration in some form, by injected
             humour, or randomised words which don’t look even slightly
             believable.
+            <br />
+            There are many variations of passages of Lorem Ipsum available, but
+            the majority have suffered alteration in some form, by injected
+            humour, or randomised words which don’t look even slightly
+            believable.
+            <br />
+            There are many variations of passages of Lorem Ipsum available, but
+            the majority have suffered alteration in some form, by injected
+            humour, or randomised words which don’t look even slightly
+            believable.
+            <br />
+            There are many variations of passages of Lorem Ipsum available, but
+            the majority have suffered alteration in some form, by injected
+            humour, or randomised words which don’t look even slightly
+            believable.
           </Desc>
-          <Price>2.000.000 ₫</Price>
+          <Price>{numberWithCommas(product.price)} ₫</Price>
           <ProductOptionsContainer>
             <Filter>
               <FilterTitle>Available sizes:</FilterTitle>
               <FilterSize>
-                <Size>36</Size>
-                <Size>37</Size>
-                <Size>38</Size>
+                {product.availableSizes.map((sizeEle) => {
+                  return (
+                    <SizeOption
+                      key={sizeEle.id}
+                      onClick={() => {
+                        setSize(sizeEle);
+                        setQuantity(1);
+                      }}
+                      isActive={size && size.id === sizeEle.id}
+                    >
+                      {sizeEle.euSize}
+                    </SizeOption>
+                  );
+                })}
               </FilterSize>
             </Filter>
           </ProductOptionsContainer>
-          <AddContainer>
+          <AddToCartContainer>
             <AmountContainer>
-              <Remove />
-              <Amount>1</Amount>
-              <Add />
+              <Remove onClick={() => handleChangeQuantity('dec')} />
+              <Amount>{quantity}</Amount>
+              <Add onClick={() => handleChangeQuantity('inc')} />
             </AmountContainer>
-            <Button>ADD TO CART</Button>
-          </AddContainer>
+            <Link to="/cart">
+              <Button onClick={handleAddToCart}>ADD TO CART</Button>
+            </Link>
+          </AddToCartContainer>
         </InfoContainer>
       </Wrapper>
 

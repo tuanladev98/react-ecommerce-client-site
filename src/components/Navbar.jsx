@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Search, ShoppingCartOutlined } from '@material-ui/icons';
+import {
+  ExitToAppOutlined,
+  Search,
+  ShoppingCartOutlined,
+} from '@material-ui/icons';
 import { Badge } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import cartApis from '../api/cart.api';
+import { logout } from '../redux/user_slice';
+import { changeCartItems } from '../redux/cart_slice';
 
 const Container = styled.div`
   height: 90px;
@@ -71,28 +81,69 @@ const AnnouncementContainer = styled.div`
 `;
 
 const Navbar = () => {
+  const cartItems = useSelector((state) => state.cart.items);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (currentUser)
+      cartApis.getCart().then((result) => {
+        dispatch(changeCartItems(result.data));
+      });
+  }, []);
+
   return (
     <Container>
       <Wrapper>
         <Left>
-          <Language>EN</Language>
+          <Language>Search:</Language>
           <SearchContainer>
             <Input placeholder="Search ..." />
             <Search style={{ color: 'gray', fontSize: '16px' }} />
           </SearchContainer>
         </Left>
         <Center>
-          <Logo>TuanLA.</Logo>
+          <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
+            <Logo>TuanLA.</Logo>
+          </Link>
         </Center>
-        <Right>
-          <MenuItem>REGISTER</MenuItem>
-          <MenuItem>LOGIN</MenuItem>
-          <MenuItem>
-            <Badge badgeContent={4} color="error">
-              <ShoppingCartOutlined />
-            </Badge>
-          </MenuItem>
-        </Right>
+        {!currentUser ? (
+          <Right>
+            <Link
+              to="/register"
+              style={{ textDecoration: 'none', color: 'black' }}
+            >
+              <MenuItem>REGISTER</MenuItem>
+            </Link>
+            <Link
+              to="/login"
+              style={{ textDecoration: 'none', color: 'black' }}
+            >
+              <MenuItem>LOGIN</MenuItem>
+            </Link>
+            <Link to="/cart">
+              <MenuItem>
+                <ShoppingCartOutlined />
+              </MenuItem>
+            </Link>
+          </Right>
+        ) : (
+          <Right>
+            <MenuItem>
+              <span>Welcome {currentUser.userInfo.name},</span>
+            </MenuItem>
+            <MenuItem onClick={() => dispatch(logout())}>
+              <ExitToAppOutlined />
+            </MenuItem>
+            <Link to="/cart">
+              <MenuItem>
+                <Badge badgeContent={cartItems.length} color="error">
+                  <ShoppingCartOutlined />
+                </Badge>
+              </MenuItem>
+            </Link>
+          </Right>
+        )}
       </Wrapper>
       <AnnouncementContainer>
         tuan_la dep trai sieu cap vu tru

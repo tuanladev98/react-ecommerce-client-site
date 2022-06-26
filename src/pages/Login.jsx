@@ -1,4 +1,9 @@
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+
+import authApis from '../api/auth.api';
+import { loginFailure, loginStart, loginSuccess } from '../redux/user_slice';
 
 const Container = styled.div`
   width: 100vw;
@@ -53,6 +58,16 @@ const Button = styled.button`
   background-color: teal;
   color: white;
   cursor: pointer;
+
+  &:disabled {
+    background-color: lightgray;
+    color: white;
+    cursor: not-allowed;
+  }
+`;
+
+const Error = styled.span`
+  color: red;
 `;
 
 const Link = styled.a`
@@ -63,16 +78,56 @@ const Link = styled.a`
 `;
 
 const Login = () => {
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [loginErrorMessage, setLoginErrorMessage] = useState(
+    'Something went wrong...'
+  );
+  const dispatch = useDispatch();
+  const { isFetching, isError } = useSelector((state) => state.user);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!email) alert('Please input email!');
+    else if (!password) alert('Please input password!');
+    else {
+      // login
+      const login = async (dispatch, email, password) => {
+        dispatch(loginStart());
+        try {
+          const loginResult = await authApis.login(email, password);
+          dispatch(loginSuccess(loginResult.data));
+        } catch (error) {
+          const { statusCode, message } = error.response.data;
+          if (statusCode < 500) setLoginErrorMessage(message);
+          dispatch(loginFailure());
+        }
+      };
+      login(dispatch, email, password);
+    }
+  };
+
   return (
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
         <Form>
-          <Input placeholder="email" />
-          <Input placeholder="password" />
+          <Input
+            type="email"
+            placeholder="email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            type="password"
+            placeholder="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <ButtonContainer>
-            <Button>LOGIN</Button>
+            <Button onClick={handleLogin} disabled={isFetching}>
+              LOGIN
+            </Button>
           </ButtonContainer>
+          {isError && <Error>{loginErrorMessage}</Error>}
           <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
           <Link>CREATE A NEW ACCOUNT?</Link>
         </Form>
