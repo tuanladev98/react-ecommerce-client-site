@@ -7,6 +7,12 @@ const cartApis = {
     return result;
   },
 
+  getCartDetail: () => {
+    const result = createPrivateRequest.get('/cart/get-cart-detail');
+
+    return result;
+  },
+
   addItem: (productId, sizeId, quantity) => {
     const result = createPrivateRequest.post('/cart/add-item', {
       productId,

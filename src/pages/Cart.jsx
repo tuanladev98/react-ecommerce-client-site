@@ -1,9 +1,14 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Add, DeleteForeverOutlined, Remove } from '@material-ui/icons';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import Newsletter from '../components/Newsletter';
+
+import cartApis from '../api/cart.api';
+import numberWithCommas from '../utils/numberWithCommas';
 
 const Container = styled.div``;
 
@@ -47,6 +52,10 @@ const Bottom = styled.div`
 
 const Info = styled.div`
   flex: 3;
+`;
+
+const ItemCart = styled.div`
+  margin-top: 5px;
 `;
 
 const Product = styled.div`
@@ -118,6 +127,7 @@ const Hr = styled.hr`
   background-color: #eee;
   border: none;
   height: 1px;
+  margin-top: 5px;
 `;
 
 const Summary = styled.div`
@@ -154,7 +164,15 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
-  const cartItems = useSelector((state) => state.cart.items);
+  const [cartItems, setCartItems] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    cartApis.getCartDetail().then((result) => {
+      setCartItems(result.data.cartItems);
+      setTotal(result.data.total);
+    });
+  }, []);
 
   return (
     <Container>
@@ -162,67 +180,80 @@ const Cart = () => {
       <Wrapper>
         <Title>YOUR BAG</Title>
         <Top>
-          <TopButton>CONTINUE SHOPPING</TopButton>
+          <Link to="/shop">
+            <TopButton>CONTINUE SHOPPING</TopButton>
+          </Link>
           <TopTexts>
             <TopText>Shopping Bag ({cartItems.length})</TopText>
           </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
+          <Link to="/checkout">
+            <TopButton type="filled">CHECKOUT NOW</TopButton>
+          </Link>
         </Top>
         <Bottom>
           <Info>
-            <Product>
-              <ItemProductDetail>
-                <Image src="https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A" />
-                <Details>
-                  <ProductName>
-                    <b>Product:</b> JESSIE THUNDER SHOES
-                  </ProductName>
-                  <ProductCode>
-                    <b>Code:</b> 93813718293
-                  </ProductCode>
-                  <ProductSize>
-                    <b>Size:</b> 37.5
-                  </ProductSize>
-                </Details>
-              </ItemProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Remove />
-                  <ProductAmount>2</ProductAmount>
-                  <Add />
-                </ProductAmountContainer>
-                <ProductPrice>$ 30</ProductPrice>
-              </PriceDetail>
-              <DeleteItem>
-                <DeleteButton>
-                  <DeleteForeverOutlined />
-                </DeleteButton>
-              </DeleteItem>
-            </Product>
-            <Hr />
+            {cartItems.map((item) => {
+              return (
+                <ItemCart>
+                  <Product>
+                    <ItemProductDetail>
+                      <Image src={item.product.image01} />
+                      <Details>
+                        <ProductName>
+                          <b>Product:</b> {item.product.productName}
+                        </ProductName>
+                        <ProductCode>
+                          <b>Code:</b> {item.product.code}
+                        </ProductCode>
+                        <ProductSize>
+                          <b>Size:</b> {item.size.euSize}
+                        </ProductSize>
+                      </Details>
+                    </ItemProductDetail>
+                    <PriceDetail>
+                      <ProductAmountContainer>
+                        <Remove />
+                        <ProductAmount>{item.quantity}</ProductAmount>
+                        <Add />
+                      </ProductAmountContainer>
+                      <ProductPrice>
+                        {numberWithCommas(item.product.price * item.quantity)} ₫
+                      </ProductPrice>
+                    </PriceDetail>
+                    <DeleteItem>
+                      <DeleteButton>
+                        <DeleteForeverOutlined />
+                      </DeleteButton>
+                    </DeleteItem>
+                  </Product>
+                  <Hr />
+                </ItemCart>
+              );
+            })}
           </Info>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>{numberWithCommas(total)} ₫</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+              <SummaryItemPrice>0 ₫</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+              <SummaryItemPrice>0 ₫</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>{numberWithCommas(total)} ₫</SummaryItemPrice>
             </SummaryItem>
             <Button>CHECKOUT NOW</Button>
           </Summary>
         </Bottom>
       </Wrapper>
+      <Newsletter />
       <Footer />
     </Container>
   );
