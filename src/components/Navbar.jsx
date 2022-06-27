@@ -90,7 +90,7 @@ const Navbar = () => {
       cartApis.getCart().then((result) => {
         dispatch(changeCartItems(result.data));
       });
-  }, []);
+  }, [currentUser, dispatch]);
 
   return (
     <Container>

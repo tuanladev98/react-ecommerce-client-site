@@ -1,5 +1,7 @@
-import { Add, Remove } from '@material-ui/icons';
+import { Add, DeleteForeverOutlined, Remove } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 
@@ -70,19 +72,12 @@ const Details = styled.div`
 
 const ProductName = styled.span``;
 
-const ProductId = styled.span``;
-
-const ProductColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-`;
+const ProductCode = styled.span``;
 
 const ProductSize = styled.span``;
 
 const PriceDetail = styled.div`
-  flex: 1;
+  flex: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,6 +98,20 @@ const ProductAmount = styled.div`
 const ProductPrice = styled.div`
   font-size: 30px;
   font-weight: 200;
+`;
+
+const DeleteItem = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const DeleteButton = styled.button`
+  color: red;
+  background-color: white;
+  border: none;
+  cursor: pointer;
 `;
 
 const Hr = styled.hr`
@@ -145,6 +154,8 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
+  const cartItems = useSelector((state) => state.cart.items);
+
   return (
     <Container>
       <Navbar />
@@ -153,7 +164,7 @@ const Cart = () => {
         <Top>
           <TopButton>CONTINUE SHOPPING</TopButton>
           <TopTexts>
-            <TopText>Shopping Bag(2)</TopText>
+            <TopText>Shopping Bag ({cartItems.length})</TopText>
           </TopTexts>
           <TopButton type="filled">CHECKOUT NOW</TopButton>
         </Top>
@@ -166,10 +177,9 @@ const Cart = () => {
                   <ProductName>
                     <b>Product:</b> JESSIE THUNDER SHOES
                   </ProductName>
-                  <ProductId>
-                    <b>ID:</b> 93813718293
-                  </ProductId>
-                  <ProductColor color="black" />
+                  <ProductCode>
+                    <b>Code:</b> 93813718293
+                  </ProductCode>
                   <ProductSize>
                     <b>Size:</b> 37.5
                   </ProductSize>
@@ -183,6 +193,11 @@ const Cart = () => {
                 </ProductAmountContainer>
                 <ProductPrice>$ 30</ProductPrice>
               </PriceDetail>
+              <DeleteItem>
+                <DeleteButton>
+                  <DeleteForeverOutlined />
+                </DeleteButton>
+              </DeleteItem>
             </Product>
             <Hr />
           </Info>
