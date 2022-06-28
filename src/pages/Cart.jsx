@@ -69,7 +69,8 @@ const ItemProductDetail = styled.div`
 `;
 
 const Image = styled.img`
-  width: 200px;
+  width: 100px;
+  height: 100px;
 `;
 
 const Details = styled.div`
@@ -192,9 +193,9 @@ const Cart = () => {
         </Top>
         <Bottom>
           <Info>
-            {cartItems.map((item) => {
+            {cartItems.map((item, index) => {
               return (
-                <ItemCart>
+                <ItemCart key={index}>
                   <Product>
                     <ItemProductDetail>
                       <Image src={item.product.image01} />

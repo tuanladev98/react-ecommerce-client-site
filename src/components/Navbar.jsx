@@ -45,6 +45,10 @@ const SearchContainer = styled.div`
 
 const Input = styled.input`
   border: none;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const Center = styled.div`
@@ -53,7 +57,7 @@ const Center = styled.div`
 `;
 
 const Logo = styled.h1`
-  front-weight: bold;
+  font-weight: bold;
 `;
 
 const Right = styled.div`
@@ -132,7 +136,12 @@ const Navbar = () => {
             <MenuItem>
               <span>Welcome {currentUser.userInfo.name},</span>
             </MenuItem>
-            <MenuItem onClick={() => dispatch(logout())}>
+            <MenuItem
+              onClick={() => {
+                dispatch(logout());
+                dispatch(changeCartItems([]));
+              }}
+            >
               <ExitToAppOutlined />
             </MenuItem>
             <Link to="/cart">

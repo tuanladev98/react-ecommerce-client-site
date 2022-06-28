@@ -1,7 +1,7 @@
 import { Add, Remove } from '@material-ui/icons';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Footer from '../components/Footer';
@@ -186,6 +186,8 @@ const ProductDetail = () => {
           else alert('Something went wrong...');
         });
     }
+
+    window.location.href = '/cart';
   };
 
   return (
@@ -247,9 +249,7 @@ const ProductDetail = () => {
               <Amount>{quantity}</Amount>
               <Add onClick={() => handleChangeQuantity('inc')} />
             </AmountContainer>
-            <Link to="/cart">
-              <Button onClick={handleAddToCart}>ADD TO CART</Button>
-            </Link>
+            <Button onClick={handleAddToCart}>ADD TO CART</Button>
           </AddToCartContainer>
         </InfoContainer>
       </Wrapper>
