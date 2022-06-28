@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import ProductDetail from './pages/ProductDetail';
 import Shop from './pages/Shop';
 import Register from './pages/Register';
+import Checkout from './pages/Checkout';
 
 const App = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -30,6 +31,9 @@ const App = () => {
         </Route>
         <Route path="/cart">
           {!currentUser ? <Redirect to="/login" /> : <Cart />}
+        </Route>
+        <Route path="/checkout">
+          <Checkout />
         </Route>
         <Route path="/login">
           {currentUser ? <Redirect to="/" /> : <Login />}
