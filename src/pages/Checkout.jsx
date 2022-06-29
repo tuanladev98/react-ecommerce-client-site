@@ -167,8 +167,19 @@ const SummaryText = styled.span``;
 const SummaryPrice = styled.span``;
 
 const Checkout = () => {
+  const [provinceData, setProvinceData] = useState(addressData);
+  const [districtData, setDistrictData] = useState([]);
+  const [wardData, setWardData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
+
+  const [receiver, setReceiver] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [province, setProvince] = useState(null);
+  const [district, setDistrict] = useState(null);
+  const [ward, setWard] = useState(null);
+  const [postcode, setPostcode] = useState(null);
 
   useEffect(() => {
     cartApis.getCartDetail().then((result) => {
@@ -176,6 +187,30 @@ const Checkout = () => {
       setTotal(result.data.total);
     });
   }, []);
+
+  const handleSelectProvince = (e) => {
+    const value = JSON.parse(e.target.value);
+    setProvince(value);
+    //
+    setDistrict(null);
+    setDistrictData(provinceData.find((ele) => ele.Id === value.Id).Districts);
+    //
+    setWard(null);
+    setWardData([]);
+  };
+
+  const handleSelectDistrict = (e) => {
+    const value = JSON.parse(e.target.value);
+    setDistrict(value);
+    setWard(null);
+    //
+    setWardData(districtData.find((ele) => ele.Id === value.Id).Wards);
+  };
+
+  const handleSelectWard = (e) => {
+    const value = JSON.parse(e.target.value);
+    setWard(value);
+  };
 
   return (
     <Container>
@@ -188,44 +223,87 @@ const Checkout = () => {
             <ShippingDetailTitle>DELIVERY INFORMATION</ShippingDetailTitle>
             <InputGroup>
               <InputLabel>Receiver *:</InputLabel>
-              <InputText name="receiver" placeholder="Enter receiver name..." />
+              <InputText
+                name="ip_receiver"
+                placeholder="Enter receiver name..."
+                onChange={(e) => setReceiver(e.target.value)}
+              />
             </InputGroup>
 
             <InputGroup>
               <InputLabel>Address *:</InputLabel>
-              <InputText name="address" placeholder="Enter address..." />
+              <InputText
+                name="ip_address"
+                placeholder="Enter address..."
+                onChange={(e) => setAddress(e.target.value)}
+              />
             </InputGroup>
 
             <InputGroup>
               <InputLabel>Phone number *:</InputLabel>
               <InputText
-                name="phone_number"
+                name="ip_phone_number"
                 placeholder="Enter phone number..."
+                onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </InputGroup>
 
             <SelectRegion>
-              <SelectGroup name="province">
-                <SelectOption value={null} disabled selected>
+              <SelectGroup name="sl_province" onChange={handleSelectProvince}>
+                <SelectOption
+                  value={null}
+                  disabled
+                  selected={province === null}
+                >
                   -- Province --
                 </SelectOption>
-                {addressData.map((province, index) => {
+                {provinceData.map((ele, index) => {
                   return (
-                    <SelectOption key={index}>{province.Name}</SelectOption>
+                    <SelectOption
+                      value={JSON.stringify({ Id: ele.Id, Name: ele.Name })}
+                      key={index}
+                    >
+                      {ele.Name}
+                    </SelectOption>
                   );
                 })}
               </SelectGroup>
-              <SelectGroup name="district">
-                <SelectOption value={null} disabled selected>
+              <SelectGroup name="sl_district" onChange={handleSelectDistrict}>
+                <SelectOption
+                  value={null}
+                  disabled
+                  selected={district === null}
+                >
                   -- District --
                 </SelectOption>
+                {districtData.map((ele, index) => {
+                  return (
+                    <SelectOption
+                      value={JSON.stringify({ Id: ele.Id, Name: ele.Name })}
+                      key={index}
+                    >
+                      {ele.Name}
+                    </SelectOption>
+                  );
+                })}
               </SelectGroup>
-              <SelectGroup name="ward">
-                <SelectOption value={null} disabled selected>
+              <SelectGroup name="sl_ward" onChange={handleSelectWard}>
+                <SelectOption value={null} disabled selected={ward === null}>
                   -- Ward --
                 </SelectOption>
+                {wardData.map((ele, index) => {
+                  return (
+                    <SelectOption value={JSON.stringify(ele)} key={index}>
+                      {ele.Name}
+                    </SelectOption>
+                  );
+                })}
               </SelectGroup>
-              <InputPostcode name="postcode" placeholder="Enter postcode..." />
+              <InputPostcode
+                name="ip_postcode"
+                placeholder="Enter postcode..."
+                onChange={(e) => setPostcode(e.target.value)}
+              />
             </SelectRegion>
 
             <SubmitOrder>
