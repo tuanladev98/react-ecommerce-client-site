@@ -321,7 +321,7 @@ const Checkout = () => {
             </SelectRegion>
 
             <SubmitOrder>
-              <SubmitButton>PLACE ORDER</SubmitButton>
+              <SubmitButton onClick={handleSubmit}>PLACE ORDER</SubmitButton>
             </SubmitOrder>
           </ShippingDetailContainer>
           <BillSummaryContainer>
