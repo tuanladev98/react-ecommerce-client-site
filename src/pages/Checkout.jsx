@@ -212,6 +212,20 @@ const Checkout = () => {
     setWard(value);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!receiver) alert('Please input receiver');
+    else if (!address) alert('Please input address');
+    else if (!phoneNumber) alert('Please input phone number');
+    else if (!province) alert('Please select province');
+    else if (!district) alert('Please select district');
+    else if (!ward) alert('Please select ward');
+    else if (!postcode) alert('Please inut postcode');
+    else {
+      // call api:
+    }
+  };
+
   return (
     <Container>
       <Navbar />
