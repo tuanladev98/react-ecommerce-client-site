@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Footer from '../components/Footer';
@@ -7,6 +6,7 @@ import Navbar from '../components/Navbar';
 import Newsletter from '../components/Newsletter';
 
 import cartApis from '../api/cart.api';
+import orderApis from '../api/order.api';
 import numberWithCommas from '../utils/numberWithCommas';
 import addressData from '../utils/address.json';
 
@@ -223,6 +223,20 @@ const Checkout = () => {
     else if (!postcode) alert('Please inut postcode');
     else {
       // call api:
+      orderApis
+        .createOrder(
+          receiver,
+          address,
+          phoneNumber,
+          province.Name,
+          district.Name,
+          ward.Name,
+          postcode
+        )
+        .then((result) => {
+          console.log(result.data);
+        })
+        .catch((error) => console.log(error));
     }
   };
 

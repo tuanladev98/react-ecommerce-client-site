@@ -33,7 +33,7 @@ const App = () => {
           {!currentUser ? <Redirect to="/login" /> : <Cart />}
         </Route>
         <Route path="/checkout">
-          <Checkout />
+          {!currentUser ? <Redirect to="/login" /> : <Checkout />}
         </Route>
         <Route path="/login">
           {currentUser ? <Redirect to="/" /> : <Login />}
