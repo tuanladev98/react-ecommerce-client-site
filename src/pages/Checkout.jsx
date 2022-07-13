@@ -32,7 +32,7 @@ const ShippingDetailContainer = styled.div`
   border: 1px solid lightgray;
   border-radius: 5px;
   padding: 10px;
-  height: 80%;
+  height: fit-content;
 `;
 
 const ShippingDetailTitle = styled.div`
