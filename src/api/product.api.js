@@ -2,7 +2,7 @@ import { createPublicRequest } from './axios_client';
 
 const productApis = {
   filterProduct: (categoryId, gender, sort) => {
-    return createPublicRequest.get('/product', {
+    return createPublicRequest.get('/product/filter', {
       params: {
         categoryId,
         gender,
