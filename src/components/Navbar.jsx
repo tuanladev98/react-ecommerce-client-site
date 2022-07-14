@@ -159,9 +159,7 @@ const Navbar = () => {
           </Right>
         )}
       </Wrapper>
-      <AnnouncementContainer>
-        tuan_la dep trai sieu cap vu tru
-      </AnnouncementContainer>
+      <AnnouncementContainer>Free ship for all orders!</AnnouncementContainer>
     </Container>
   );
 };
