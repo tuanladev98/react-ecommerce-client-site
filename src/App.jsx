@@ -4,7 +4,6 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import Cart from './pages/Cart';
 import Home from './pages/Home';
@@ -15,7 +14,7 @@ import Register from './pages/Register';
 import Checkout from './pages/Checkout';
 
 const App = () => {
-  const currentUser = useSelector((state) => state.user.currentUser);
+  const CURRENT_USER = JSON.parse(localStorage.getItem('currentUser'));
 
   return (
     <Router>
@@ -30,16 +29,16 @@ const App = () => {
           <ProductDetail />
         </Route>
         <Route path="/cart">
-          {!currentUser ? <Redirect to="/login" /> : <Cart />}
+          {!CURRENT_USER ? <Redirect to="/login" /> : <Cart />}
         </Route>
         <Route path="/checkout">
-          {!currentUser ? <Redirect to="/login" /> : <Checkout />}
+          {!CURRENT_USER ? <Redirect to="/login" /> : <Checkout />}
         </Route>
         <Route path="/login">
-          {currentUser ? <Redirect to="/" /> : <Login />}
+          {CURRENT_USER ? <Redirect to="/" /> : <Login />}
         </Route>
         <Route path="/register">
-          {currentUser ? <Redirect to="/" /> : <Register />}
+          {CURRENT_USER ? <Redirect to="/" /> : <Register />}
         </Route>
       </Switch>
     </Router>

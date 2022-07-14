@@ -2,7 +2,7 @@ import { createPublicRequest } from './axios_client';
 
 const sizeApis = {
   getAllSize: () => {
-    const result = createPublicRequest.get('/size');
+    const result = createPublicRequest().get('/size');
 
     return result;
   },

@@ -97,6 +97,7 @@ const Login = () => {
         try {
           const loginResult = await authApis.login(email, password);
           dispatch(loginSuccess(loginResult.data));
+          window.location.href = '/';
         } catch (error) {
           const { statusCode, message } = error.response.data;
           if (statusCode < 500) setLoginErrorMessage(message);

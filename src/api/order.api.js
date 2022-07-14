@@ -10,7 +10,7 @@ const orderApis = {
     ward,
     postcode
   ) => {
-    const result = createPrivateRequest.post('/order/create', {
+    const result = createPrivateRequest().post('/order/create', {
       receiver,
       address,
       phoneNumber,

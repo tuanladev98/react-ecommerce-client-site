@@ -125,11 +125,13 @@ const Navbar = () => {
             >
               <MenuItem>LOGIN</MenuItem>
             </Link>
-            <Link to="/cart">
-              <MenuItem>
-                <ShoppingCartOutlined />
-              </MenuItem>
-            </Link>
+            <MenuItem
+              onClick={() => {
+                window.location.href = '/cart';
+              }}
+            >
+              <ShoppingCartOutlined />
+            </MenuItem>
           </Right>
         ) : (
           <Right>
@@ -140,17 +142,20 @@ const Navbar = () => {
               onClick={() => {
                 dispatch(logout());
                 dispatch(changeCartItems([]));
+                window.location.href = '/';
               }}
             >
               <ExitToAppOutlined />
             </MenuItem>
-            <Link to="/cart">
-              <MenuItem>
-                <Badge badgeContent={cartItems.length} color="error">
-                  <ShoppingCartOutlined />
-                </Badge>
-              </MenuItem>
-            </Link>
+            <MenuItem
+              onClick={() => {
+                window.location.href = '/cart';
+              }}
+            >
+              <Badge badgeContent={cartItems.length} color="error">
+                <ShoppingCartOutlined />
+              </Badge>
+            </MenuItem>
           </Right>
         )}
       </Wrapper>

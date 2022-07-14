@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const userSlide = createSlice({
   name: 'user',
   initialState: {
-    currentUser: null,
+    currentUser: JSON.parse(localStorage.getItem('currentUser')),
     isFetching: false,
     isError: false,
   },
@@ -14,6 +14,7 @@ const userSlide = createSlice({
     loginSuccess: (state, action) => {
       state.isFetching = false;
       state.currentUser = action.payload;
+      localStorage.setItem('currentUser', JSON.stringify(action.payload));
     },
     loginFailure: (state) => {
       state.isFetching = false;
@@ -23,6 +24,7 @@ const userSlide = createSlice({
       state.currentUser = null;
       state.isFetching = false;
       state.isError = false;
+      localStorage.clear();
     },
   },
 });
