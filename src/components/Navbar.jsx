@@ -108,7 +108,7 @@ const Navbar = () => {
         </Left>
         <Center>
           <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
-            <Logo>TuanLA.</Logo>
+            <Logo>...</Logo>
           </Link>
         </Center>
         {!currentUser ? (
