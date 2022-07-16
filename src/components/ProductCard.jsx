@@ -4,7 +4,9 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from '@material-ui/icons';
+
 import numberWithCommas from '../utils/numberWithCommas';
+import formatGenderUtil from '../utils/format_gender';
 
 const ActionContainer = styled.div`
   opacity: 0;
@@ -97,7 +99,10 @@ const ProductCard = ({ productData }) => {
       <InfoContainer>
         <Price>{numberWithCommas(productData.price)}₫</Price>
         <Title>{productData.productName}</Title>
-        <CategoryTitle>Men Originals</CategoryTitle>
+        <CategoryTitle>
+          {formatGenderUtil(productData.gender)}{' '}
+          {productData.category.categoryName}
+        </CategoryTitle>
       </InfoContainer>
       <ActionContainer>
         <Icon>
