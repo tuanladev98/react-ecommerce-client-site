@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 import authApis from '../api/auth.api';
@@ -88,8 +89,8 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (!email) alert('Please input email!');
-    else if (!password) alert('Please input password!');
+    if (!email) toast('Please input email!');
+    else if (!password) toast('Please input password!');
     else {
       // login
       const login = async (dispatch, email, password) => {

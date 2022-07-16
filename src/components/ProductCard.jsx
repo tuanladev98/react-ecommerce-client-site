@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import {
   FavoriteBorderOutlined,
-  SearchOutlined,
   ShoppingCartOutlined,
 } from '@material-ui/icons';
 
@@ -106,10 +105,7 @@ const ProductCard = ({ productData }) => {
       </InfoContainer>
       <ActionContainer>
         <Icon>
-          <ShoppingCartOutlined />
-        </Icon>
-        <Icon>
-          <SearchOutlined
+          <ShoppingCartOutlined
             onClick={() => {
               window.location.href = `/product/${productData.code}`;
             }}

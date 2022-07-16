@@ -10,6 +10,7 @@ import {
 import styled from 'styled-components';
 
 const Container = styled.div`
+  border-top: 1px solid lightgray;
   display: flex;
 `;
 

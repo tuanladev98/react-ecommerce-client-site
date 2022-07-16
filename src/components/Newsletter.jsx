@@ -3,7 +3,7 @@ import { Send } from '@material-ui/icons';
 
 const Container = styled.div`
   height: 40vh;
-  background-color: #fcf5f5;
+  background-color: #f2f7de;
   display: flex;
   align-items: center;
   justify-content: center;
