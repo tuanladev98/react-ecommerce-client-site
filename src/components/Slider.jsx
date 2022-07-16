@@ -50,10 +50,20 @@ const Slide = styled.div`
 const ImgContainer = styled.div`
   height: 100%;
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ImgFrame = styled.div`
+  width: 80%;
+  height: 80%;
 `;
 
 const Image = styled.img`
-  height: 80%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const InfoContainer = styled.div`
@@ -104,7 +114,9 @@ const Slider = () => {
         {slideItems.map((slide, index) => (
           <Slide bg={slide.bg} key={index}>
             <ImgContainer>
-              <Image src={slide.img} />
+              <ImgFrame>
+                <Image src={slide.img} />
+              </ImgFrame>
             </ImgContainer>
             <InfoContainer>
               <Title>{slide.title}</Title>

@@ -9,18 +9,16 @@ const Container = styled.div`
   padding: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
 `;
 
 const PopularProducts = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    productApis
-      .getPopularProduct()
-      .then((result) => {
-        setProducts(result.data);
-      });
+    productApis.getPopularProduct().then((result) => {
+      setProducts(result.data);
+    });
   }, []);
 
   return (

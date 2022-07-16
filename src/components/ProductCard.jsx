@@ -4,9 +4,9 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from '@material-ui/icons';
-import { Link } from 'react-router-dom';
+import numberWithCommas from '../utils/numberWithCommas';
 
-const Info = styled.div`
+const ActionContainer = styled.div`
   opacity: 0;
   width: 100%;
   height: 100%;
@@ -19,35 +19,6 @@ const Info = styled.div`
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-`;
-
-const Container = styled.div`
-  flex: 1;
-  margin: 5px;
-  min-width: 280px;
-  height: 350px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f5fbfd;
-  cursor: pointer;
-  position: relative;
-  &:hover ${Info} {
-    opacity: 1;
-  }
-`;
-
-const Circle = styled.div`
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background-color: white;
-  position: absolute;
-`;
-
-const Image = styled.img`
-  height: 75%;
-  z-index: 2;
 `;
 
 const Icon = styled.div`
@@ -66,24 +37,83 @@ const Icon = styled.div`
   }
 `;
 
+const Container = styled.div`
+  /* flex: 1; */
+  margin: 5px;
+  max-width: 293px;
+  height: 380px;
+  /* display: flex;
+  align-items: flex-start;
+  justify-content: center; */
+  background-color: #f5fbfd;
+  cursor: pointer;
+  position: relative;
+  &:hover ${ActionContainer} {
+    opacity: 1;
+    border: 1px solid black;
+  }
+`;
+
+const ImageContainer = styled.div`
+  width: 100%;
+  /* z-index: 2; */
+`;
+
+const Image = styled.img`
+  width: 100%;
+`;
+
+const InfoContainer = styled.div`
+  width: 100%;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+`;
+
+const Price = styled.div`
+  margin: 5px 10px;
+  font-weight: 300;
+  font-style: italic;
+`;
+
+const Title = styled.div`
+  margin-left: 10px;
+  font-weight: 700;
+`;
+
+const CategoryTitle = styled.div`
+  margin-left: 10px;
+  font-weight: 50;
+`;
+
 const ProductCard = ({ productData }) => {
   return (
     <Container>
-      <Circle />
-      <Image src={productData.image01} />
-      <Info>
+      <ImageContainer>
+        <Image src={productData.image01} />
+      </ImageContainer>
+      <InfoContainer>
+        <Price>{numberWithCommas(productData.price)}₫</Price>
+        <Title>{productData.productName}</Title>
+        <CategoryTitle>Men Originals</CategoryTitle>
+      </InfoContainer>
+      <ActionContainer>
         <Icon>
           <ShoppingCartOutlined />
         </Icon>
         <Icon>
-          <Link to={`/product/${productData.code}`}>
-            <SearchOutlined />
-          </Link>
+          <SearchOutlined
+            onClick={() => {
+              window.location.href = `/product/${productData.code}`;
+            }}
+          />
         </Icon>
         <Icon>
           <FavoriteBorderOutlined />
         </Icon>
-      </Info>
+      </ActionContainer>
     </Container>
   );
 };
