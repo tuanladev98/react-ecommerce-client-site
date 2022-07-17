@@ -22,6 +22,24 @@ const cartApis = {
 
     return result;
   },
+
+  updateItem: (productId, sizeId, quantity) => {
+    const result = createPrivateRequest().put('/cart/update-item', {
+      productId,
+      sizeId,
+      quantity,
+    });
+
+    return result;
+  },
+
+  deleteItem: (productId, sizeId) => {
+    const result = createPrivateRequest().delete('/cart/delete-item', {
+      data: { productId, sizeId },
+    });
+
+    return result;
+  },
 };
 
 export default cartApis;

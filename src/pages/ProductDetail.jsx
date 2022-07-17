@@ -142,7 +142,7 @@ const Amount = styled.span`
   align-items: center;
   justify-content: center;
   margin: 0px 5px;
-  cursor: not-allowed;
+  cursor: default;
 `;
 
 const SubmitButton = styled.div`

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Footer from '../components/Footer';
@@ -13,7 +14,7 @@ import addressData from '../utils/address.json';
 const Container = styled.div``;
 
 const Wrapper = styled.div`
-  padding: 20px 200px;
+  padding: 20px 300px;
 `;
 
 const Title = styled.h1`
@@ -21,7 +22,7 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const OrderContainer = styled.div`
+const CheckoutContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
@@ -112,15 +113,49 @@ const SubmitButton = styled.button`
   }
 `;
 
-const BillSummaryContainer = styled.div`
+const OrderSummaryContainer = styled.div`
   flex: 2;
+  height: fit-content;
+  margin: 10px;
+  margin: 40px 0px;
+`;
+
+const OrderSummary = styled.div`
+  width: 100%;
+  height: fit-content;
+  margin: 0px 10px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  padding: 10px;
+`;
+
+const OrderSummaryTitle = styled.div`
+  font-weight: bold;
+  text-align: center;
+`;
+
+const OrderSummaryItem = styled.div`
+  margin: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: ${(props) => props.type === 'total' && '500'};
+  font-size: ${(props) => props.type === 'total' && '24px'};
+`;
+
+const OrderSummaryItemText = styled.span``;
+
+const OrderSummaryItemPrice = styled.span``;
+
+const OrderDetail = styled.div`
+  width: 100%;
+  height: fit-content;
   margin: 40px 10px;
   border: 1px dashed lightgray;
   border-radius: 5px;
   padding: 10px;
 `;
 
-const BillSummaryTitle = styled.div`
+const OrderDetailTitle = styled.div`
   font-weight: bold;
   text-align: center;
 `;
@@ -133,7 +168,6 @@ const Item = styled.div`
   display: flex;
   margin-top: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid lightgray;
 `;
 
 const ImageProduct = styled.img`
@@ -154,20 +188,57 @@ const ProductSize = styled.span``;
 
 const Quantity = styled.span``;
 
-const SummaryTotal = styled.div`
-  margin: 30px 0px;
+const EditCart = styled.div`
   display: flex;
-  justify-content: space-between;
-  font-weight: 500;
-  font-size: 24px;
+  align-items: center;
+  justify-content: center;
 `;
 
-const SummaryText = styled.span``;
+const EditCartButton = styled.button`
+  width: 150px;
+  padding: 10px;
+  font-weight: 1000;
+  cursor: pointer;
+  border: 1px solid black;
+  background-color: black;
+  color: white;
+  margin: 10px 0px;
+`;
 
-const SummaryPrice = styled.span``;
+const AcceptedPaymentMethod = styled.div`
+  width: 100%;
+  height: fit-content;
+  margin: 40px 10px;
+  padding: 10px;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  padding: 20px;
+`;
+
+const AcceptedPaymentMethodTitle = styled.div`
+  font-weight: bold;
+  text-align: center;
+`;
+
+const PaymentMethodItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 20px;
+`;
+
+const PaymentMethodItemImage = styled.img`
+  width: 50px;
+  height: 30px;
+  margin: 0px 10px;
+`;
+
+const PaymentMethodItemTitle = styled.span`
+  margin: 0px 10px;
+`;
 
 const Checkout = () => {
-  const [provinceData, setProvinceData] = useState(addressData);
+  const provinceData = addressData;
   const [districtData, setDistrictData] = useState([]);
   const [wardData, setWardData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
@@ -246,7 +317,7 @@ const Checkout = () => {
 
       <Wrapper>
         <Title>COMPLETE YOUR ORDER</Title>
-        <OrderContainer>
+        <CheckoutContainer>
           <ShippingDetailContainer>
             <ShippingDetailTitle>DELIVERY INFORMATION</ShippingDetailTitle>
             <InputGroup>
@@ -338,36 +409,80 @@ const Checkout = () => {
               <SubmitButton onClick={handleSubmit}>PLACE ORDER</SubmitButton>
             </SubmitOrder>
           </ShippingDetailContainer>
-          <BillSummaryContainer>
-            <BillSummaryTitle>BILL SUMMARY</BillSummaryTitle>
-            <ListItem>
-              {cartItems.map((item, index) => {
-                return (
-                  <Item key={index}>
-                    <ImageProduct src={item.product.image01} />
-                    <ItemDetail>
-                      <ProductName>
-                        <b>Product:</b> {item.product.productName} (
-                        {item.product.code})
-                      </ProductName>
-                      <ProductSize>
-                        <b>Size:</b> 41
-                      </ProductSize>
-                      <Quantity>
-                        <b>Quantity:</b> 1
-                      </Quantity>
-                    </ItemDetail>
-                  </Item>
-                );
-              })}
-            </ListItem>
+          <OrderSummaryContainer>
+            <OrderSummary>
+              <OrderSummaryTitle>ORDER SUMMARY</OrderSummaryTitle>
+              <OrderSummaryItem>
+                <OrderSummaryItemText>
+                  {cartItems
+                    .map((item) => item.quantity)
+                    .reduce(
+                      (previousVal, currentVal) => previousVal + currentVal,
+                      0
+                    )}{' '}
+                  ITEMS
+                </OrderSummaryItemText>
+                <OrderSummaryItemPrice>
+                  {numberWithCommas(total)} ₫
+                </OrderSummaryItemPrice>
+              </OrderSummaryItem>
+              <OrderSummaryItem>
+                <OrderSummaryItemText>DELIVERY</OrderSummaryItemText>
+                <OrderSummaryItemPrice>Free</OrderSummaryItemPrice>
+              </OrderSummaryItem>
+              <OrderSummaryItem type="total">
+                <OrderSummaryItemText>TOTAL</OrderSummaryItemText>
+                <OrderSummaryItemPrice>
+                  {numberWithCommas(total)} ₫
+                </OrderSummaryItemPrice>
+              </OrderSummaryItem>
+            </OrderSummary>
 
-            <SummaryTotal>
-              <SummaryText>Total:</SummaryText>
-              <SummaryPrice>{numberWithCommas(total)} ₫</SummaryPrice>
-            </SummaryTotal>
-          </BillSummaryContainer>
-        </OrderContainer>
+            <OrderDetail>
+              <OrderDetailTitle>ORDER DETAIL</OrderDetailTitle>
+              <ListItem>
+                {cartItems.map((item, index) => {
+                  return (
+                    <Item key={index}>
+                      <Link to={`/product/${item.product.code}`}>
+                        <ImageProduct src={item.product.image01} />
+                      </Link>
+                      <ItemDetail>
+                        <ProductName>
+                          <b>Product:</b> {item.product.productName} (
+                          {item.product.code})
+                        </ProductName>
+                        <ProductSize>
+                          <b>Size:</b> {item.size.euSize}
+                        </ProductSize>
+                        <Quantity>
+                          <b>Quantity:</b> {item.quantity}
+                        </Quantity>
+                      </ItemDetail>
+                    </Item>
+                  );
+                })}
+              </ListItem>
+              <EditCart>
+                <Link to="/cart">
+                  <EditCartButton>EDIT ITEMS</EditCartButton>
+                </Link>
+              </EditCart>
+            </OrderDetail>
+
+            <AcceptedPaymentMethod>
+              <AcceptedPaymentMethodTitle>
+                ACCEPTED PAYMENT METHODS
+              </AcceptedPaymentMethodTitle>
+              <PaymentMethodItem>
+                <PaymentMethodItemImage src="https://www.adidas.com.vn/static/checkout/react/158aba0/assets/img/icon-adidas-cash-on-delivery.svg" />
+                <PaymentMethodItemTitle>
+                  - Cash on delivery
+                </PaymentMethodItemTitle>
+              </PaymentMethodItem>
+            </AcceptedPaymentMethod>
+          </OrderSummaryContainer>
+        </CheckoutContainer>
       </Wrapper>
 
       <Newsletter />
