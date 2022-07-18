@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
@@ -9,7 +10,6 @@ import Newsletter from '../components/Newsletter';
 import cartApis from '../api/cart.api';
 import orderApis from '../api/order.api';
 import numberWithCommas from '../utils/numberWithCommas';
-import addressData from '../utils/address.json';
 
 const Container = styled.div``;
 
@@ -238,7 +238,7 @@ const PaymentMethodItemTitle = styled.span`
 `;
 
 const Checkout = () => {
-  const provinceData = addressData;
+  const [provinceData, setProvinceData] = useState([]);
   const [districtData, setDistrictData] = useState([]);
   const [wardData, setWardData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
@@ -259,27 +259,75 @@ const Checkout = () => {
     });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(
+        'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province',
+        {
+          headers: {
+            token: '6955b7d1-063f-11ed-9cd0-9a5a4229953a',
+          },
+        }
+      )
+      .then((result) => {
+        setProvinceData(result.data['data']);
+      });
+  }, []);
+
   const handleSelectProvince = (e) => {
     const value = JSON.parse(e.target.value);
-    setProvince(value);
-    //
-    setDistrict(null);
-    setDistrictData(provinceData.find((ele) => ele.Id === value.Id).Districts);
-    //
-    setWard(null);
-    setWardData([]);
+
+    if (value)
+      axios
+        .get(
+          'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district',
+          {
+            headers: {
+              token: '6955b7d1-063f-11ed-9cd0-9a5a4229953a',
+            },
+            params: {
+              province_id: value.ProvinceID,
+            },
+          }
+        )
+        .then((result) => {
+          setProvince(value);
+          //
+          setDistrict(null);
+          setDistrictData(result.data['data']);
+          //
+          setWard(null);
+          setWardData([]);
+        });
   };
 
   const handleSelectDistrict = (e) => {
     const value = JSON.parse(e.target.value);
-    setDistrict(value);
-    setWard(null);
-    //
-    setWardData(districtData.find((ele) => ele.Id === value.Id).Wards);
+
+    if (value)
+      axios
+        .get(
+          'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward',
+          {
+            headers: {
+              token: '6955b7d1-063f-11ed-9cd0-9a5a4229953a',
+            },
+            params: {
+              district_id: value.DistrictID,
+            },
+          }
+        )
+        .then((result) => {
+          setDistrict(value);
+          //
+          setWard(null);
+          setWardData(result.data['data']);
+        });
   };
 
   const handleSelectWard = (e) => {
     const value = JSON.parse(e.target.value);
+
     setWard(value);
   };
 
@@ -299,9 +347,9 @@ const Checkout = () => {
           receiver,
           address,
           phoneNumber,
-          province.Name,
-          district.Name,
-          ward.Name,
+          province.ProvinceName,
+          district.DistrictName,
+          ward.WardName,
           postcode
         )
         .then((result) => {
@@ -358,11 +406,8 @@ const Checkout = () => {
                 </SelectOption>
                 {provinceData.map((ele, index) => {
                   return (
-                    <SelectOption
-                      value={JSON.stringify({ Id: ele.Id, Name: ele.Name })}
-                      key={index}
-                    >
-                      {ele.Name}
+                    <SelectOption value={JSON.stringify(ele)} key={index}>
+                      {ele.ProvinceName}
                     </SelectOption>
                   );
                 })}
@@ -377,11 +422,8 @@ const Checkout = () => {
                 </SelectOption>
                 {districtData.map((ele, index) => {
                   return (
-                    <SelectOption
-                      value={JSON.stringify({ Id: ele.Id, Name: ele.Name })}
-                      key={index}
-                    >
-                      {ele.Name}
+                    <SelectOption value={JSON.stringify(ele)} key={index}>
+                      {ele.DistrictName}
                     </SelectOption>
                   );
                 })}
@@ -393,7 +435,7 @@ const Checkout = () => {
                 {wardData.map((ele, index) => {
                   return (
                     <SelectOption value={JSON.stringify(ele)} key={index}>
-                      {ele.Name}
+                      {ele.WardName}
                     </SelectOption>
                   );
                 })}
