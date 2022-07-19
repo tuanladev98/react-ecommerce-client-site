@@ -465,7 +465,7 @@ const Checkout = () => {
                   ITEMS
                 </OrderSummaryItemText>
                 <OrderSummaryItemPrice>
-                  {numberWithCommas(total)} ₫
+                  {numberWithCommas(total)}₫
                 </OrderSummaryItemPrice>
               </OrderSummaryItem>
               <OrderSummaryItem>
@@ -475,7 +475,7 @@ const Checkout = () => {
               <OrderSummaryItem type="total">
                 <OrderSummaryItemText>TOTAL</OrderSummaryItemText>
                 <OrderSummaryItemPrice>
-                  {numberWithCommas(total)} ₫
+                  {numberWithCommas(total)}₫
                 </OrderSummaryItemPrice>
               </OrderSummaryItem>
             </OrderSummary>
