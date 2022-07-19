@@ -483,9 +483,9 @@ const Checkout = () => {
             <OrderDetail>
               <OrderDetailTitle>ORDER DETAIL</OrderDetailTitle>
               <ListItem>
-                {cartItems.map((item, index) => {
+                {cartItems.map((item) => {
                   return (
-                    <Item key={index}>
+                    <Item key={item.id}>
                       <Link to={`/product/${item.product.code}`}>
                         <ImageProduct src={item.product.image01} />
                       </Link>

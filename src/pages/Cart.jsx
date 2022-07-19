@@ -295,9 +295,9 @@ const Cart = () => {
           </Top>
           <Bottom>
             <Info>
-              {cartItems.map((item, index) => {
+              {cartItems.map((item) => {
                 return (
-                  <ItemCart key={index}>
+                  <ItemCart key={item.id}>
                     <Product>
                       <ItemProductDetail>
                         <Link to={`/product/${item.product.code}`}>
