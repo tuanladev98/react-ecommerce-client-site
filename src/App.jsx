@@ -5,7 +5,6 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import ChatBot from 'react-simple-chatbot';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,7 +15,6 @@ import ProductDetail from './pages/ProductDetail';
 import Shop from './pages/Shop';
 import Register from './pages/Register';
 import Checkout from './pages/Checkout';
-import ChatWidget from './components/ChatWidget';
 
 import { socket, SocketContext } from './socket/socketContext';
 
@@ -50,26 +48,6 @@ const App = () => {
           </Route>
         </Switch>
       </Router>
-
-      {CURRENT_USER && (
-        <>
-          {/* <ChatWidget /> */}
-          <ChatBot
-            steps={[
-              {
-                id: '0',
-                message: 'Welcome to react chatbot!',
-                trigger: '1',
-              },
-              {
-                id: '1',
-                message: 'Bye!',
-                end: true,
-              },
-            ]}
-          />
-        </>
-      )}
 
       <ToastContainer position="bottom-right" newestOnTop autoClose={2000} />
     </SocketContext.Provider>
