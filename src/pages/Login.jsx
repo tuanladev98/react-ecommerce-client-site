@@ -89,8 +89,8 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (!email) toast('Please input email!');
-    else if (!password) toast('Please input password!');
+    if (!email) toast.error('Please input email!');
+    else if (!password) toast.error('Please input password!');
     else {
       // login
       const login = async (dispatch, email, password) => {
