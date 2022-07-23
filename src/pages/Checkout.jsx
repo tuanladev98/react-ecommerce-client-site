@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
@@ -10,6 +11,8 @@ import Newsletter from '../components/Newsletter';
 import cartApis from '../api/cart.api';
 import orderApis from '../api/order.api';
 import numberWithCommas from '../utils/numberWithCommas';
+import provinceData from '../assets/address.json';
+import { changeCartItems } from '../redux/cart_slice';
 
 const Container = styled.div``;
 
@@ -211,7 +214,6 @@ const AcceptedPaymentMethod = styled.div`
   margin: 40px 10px;
   padding: 10px;
   border-top: 1px solid lightgray;
-  border-bottom: 1px solid lightgray;
   padding: 20px;
 `;
 
@@ -238,9 +240,11 @@ const PaymentMethodItemTitle = styled.span`
 `;
 
 const Checkout = () => {
-  const [provinceData, setProvinceData] = useState([]);
+  const dispatch = useDispatch();
+
   const [districtData, setDistrictData] = useState([]);
   const [wardData, setWardData] = useState([]);
+
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
 
@@ -259,70 +263,29 @@ const Checkout = () => {
     });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(
-        'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province',
-        {
-          headers: {
-            token: '6955b7d1-063f-11ed-9cd0-9a5a4229953a',
-          },
-        }
-      )
-      .then((result) => {
-        setProvinceData(result.data['data']);
-      });
-  }, []);
-
   const handleSelectProvince = (e) => {
     const value = JSON.parse(e.target.value);
 
-    if (value)
-      axios
-        .get(
-          'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district',
-          {
-            headers: {
-              token: '6955b7d1-063f-11ed-9cd0-9a5a4229953a',
-            },
-            params: {
-              province_id: value.ProvinceID,
-            },
-          }
-        )
-        .then((result) => {
-          setProvince(value);
-          //
-          setDistrict(null);
-          setDistrictData(result.data['data']);
-          //
-          setWard(null);
-          setWardData([]);
-        });
+    if (value) {
+      setProvince(value);
+      //
+      setDistrict(null);
+      setDistrictData(value.Districts);
+      //
+      setWard(null);
+      setWardData([]);
+    }
   };
 
   const handleSelectDistrict = (e) => {
     const value = JSON.parse(e.target.value);
 
-    if (value)
-      axios
-        .get(
-          'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward',
-          {
-            headers: {
-              token: '6955b7d1-063f-11ed-9cd0-9a5a4229953a',
-            },
-            params: {
-              district_id: value.DistrictID,
-            },
-          }
-        )
-        .then((result) => {
-          setDistrict(value);
-          //
-          setWard(null);
-          setWardData(result.data['data']);
-        });
+    if (value) {
+      setDistrict(value);
+      //
+      setWard(null);
+      setWardData(value.Wards);
+    }
   };
 
   const handleSelectWard = (e) => {
@@ -333,13 +296,13 @@ const Checkout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!receiver) alert('Please input receiver');
-    else if (!address) alert('Please input address');
-    else if (!phoneNumber) alert('Please input phone number');
-    else if (!province) alert('Please select province');
-    else if (!district) alert('Please select district');
-    else if (!ward) alert('Please select ward');
-    else if (!postcode) alert('Please inut postcode');
+    if (!receiver) toast.error('Please input receiver');
+    else if (!address) toast.error('Please input address');
+    else if (!phoneNumber) toast.error('Please input phone number');
+    else if (!province) toast.error('Please select province');
+    else if (!district) toast.error('Please select district');
+    else if (!ward) toast.error('Please select ward');
+    else if (!postcode) toast.error('Please input postcode');
     else {
       // call api:
       orderApis
@@ -347,15 +310,19 @@ const Checkout = () => {
           receiver,
           address,
           phoneNumber,
-          province.ProvinceName,
-          district.DistrictName,
-          ward.WardName,
+          province.Name,
+          district.Name,
+          ward.Name,
           postcode
         )
         .then((result) => {
-          console.log(result.data);
+          dispatch(changeCartItems([]));
+          toast.success(`Create order success. Redirecting to payment page.`);
+          window.location.href = '/payment/' + result.data.orderCode;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          toast.error(`An error occurred. Please try again.`);
+        });
     }
   };
 
@@ -404,10 +371,10 @@ const Checkout = () => {
                 >
                   -- Province --
                 </SelectOption>
-                {provinceData.map((ele, index) => {
+                {provinceData.map((ele) => {
                   return (
-                    <SelectOption value={JSON.stringify(ele)} key={index}>
-                      {ele.ProvinceName}
+                    <SelectOption value={JSON.stringify(ele)} key={ele.Id}>
+                      {ele.Name}
                     </SelectOption>
                   );
                 })}
@@ -420,10 +387,10 @@ const Checkout = () => {
                 >
                   -- District --
                 </SelectOption>
-                {districtData.map((ele, index) => {
+                {districtData.map((ele) => {
                   return (
-                    <SelectOption value={JSON.stringify(ele)} key={index}>
-                      {ele.DistrictName}
+                    <SelectOption value={JSON.stringify(ele)} key={ele.Id}>
+                      {ele.Name}
                     </SelectOption>
                   );
                 })}
@@ -432,10 +399,10 @@ const Checkout = () => {
                 <SelectOption value={null} disabled selected={ward === null}>
                   -- Ward --
                 </SelectOption>
-                {wardData.map((ele, index) => {
+                {wardData.map((ele) => {
                   return (
-                    <SelectOption value={JSON.stringify(ele)} key={index}>
-                      {ele.WardName}
+                    <SelectOption value={JSON.stringify(ele)} key={ele.Id}>
+                      {ele.Name}
                     </SelectOption>
                   );
                 })}
@@ -448,9 +415,12 @@ const Checkout = () => {
             </SelectRegion>
 
             <SubmitOrder>
-              <SubmitButton onClick={handleSubmit}>PLACE ORDER</SubmitButton>
+              <SubmitButton onClick={handleSubmit}>
+                CREATE ORDER AND PAYMENT
+              </SubmitButton>
             </SubmitOrder>
           </ShippingDetailContainer>
+
           <OrderSummaryContainer>
             <OrderSummary>
               <OrderSummaryTitle>ORDER SUMMARY</OrderSummaryTitle>
@@ -461,7 +431,8 @@ const Checkout = () => {
                     .reduce(
                       (previousVal, currentVal) => previousVal + currentVal,
                       0
-                    )}{' '}
+                    )}
+                  {'  '}
                   ITEMS
                 </OrderSummaryItemText>
                 <OrderSummaryItemPrice>

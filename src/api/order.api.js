@@ -22,6 +22,14 @@ const orderApis = {
 
     return result;
   },
+
+  getOrderDetail: (orderCode) => {
+    const result = createPrivateRequest().get(
+      '/order/order-detail/' + orderCode
+    );
+
+    return result;
+  },
 };
 
 export default orderApis;

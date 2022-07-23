@@ -1,0 +1,76 @@
+.sc-message {
+  width: 300px;
+  margin: auto;
+  padding-bottom: 10px;
+  display: flex;
+}
+
+.sc-message--content {
+  width: 100%;
+  display: flex;
+}
+
+.sc-message--content.sent {
+  justify-content: flex-end;
+}
+
+.sc-message--content.sent .sc-message--avatar {
+  display: none;
+}
+
+.sc-message--avatar {
+  background-image: url('https://lh3.googleusercontent.com/Q0qUwFtXRmtKEYzEsCiATjafV5byGJ3nGe1ZOOOEFk3TGDv-2JyfZ6VEmLIXAc8irPOYs6YIp38n3i-WR9a4tiAKX9KG6XRJnZxz7w33CEjW0HF81aDmCH4cUr-O5ugpqU8HCHHA2KQS3AKtas2Nqiw6Ox53uCNOSrDpUdBQuJwbcrkj2kyn-1S8UjOXtA0E5NFq95hk7B2PKB0xfBxaEWwHd3ikiME5i6rZHOzDxd0SBlC0AeZTR8nP8qFUN6gEyLEV8zw3D2DE8ev58jPwZFkzQ9xa5ZAOLZCu4SYiF43SI4DrNVzKUx4kBYLQR-GTqMfom6_zET69zr0_xSNgeS4lT1gmmVJlIoPOdVGo5ussKHBYkCJigUen3NddsXMHz7aeW7wFQpf2EidnkXtIjTEIemm9GiCYTA5rJiHai4d7j7H5WCyxMYHxbtHkbT7jnq11yL3M7x45UoJMUbIv5t-ZvvpwfJ3gKSmxEVXh8wd4n-ovmcdpsyrxTK5_F7FY0t-e9KCMXQdP9EM7eYd1X_rLnmIy6cDLek11vzcg0Hx9MvDNLQ-DdgTUVXNmiYJ3zro4GdVA1OMXijQqme4y6uQYQdG6UHuI9Tz-krQbjkDMQZfCIKV8Phwpx2KMVeiIiRJLgtpIi_OV11kUXYgzJelcWvOF2m7nYx_-Jqx8FZZBbBGw-p-bBeC5ofE5eGDlI4uqnL7DBKdE5q_pCnwWZCe68D8QHs7JFHAk89fm_kJO3x-SA3tWrHvXSUIUGFoLeQRQGcx029SWGA2PQVejg2iKTksVaVn8kNgs=w505-h948-no?authuser=0');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+  align-self: center;
+  margin-right: 15px;
+}
+
+.sc-message--detail {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 90px);
+}
+
+.sc-message--content.sent .sc-message--detail {
+  max-width: calc(100% - 120px);
+  align-items: flex-end;
+}
+
+.sc-message--content.received .sc-message--detail {
+  width: fit-content;
+  margin-right: 40px;
+}
+
+.sc-message--text {
+  padding: 17px 20px;
+  border-radius: 6px;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  -webkit-font-smoothing: subpixel-antialiased;
+  word-wrap: break-word;
+}
+
+.sc-message--content.sent .sc-message--detail > .sc-message--text {
+  color: white;
+  background-color: #4e8cff;
+  word-wrap: break-word;
+}
+
+.sc-message--content.received .sc-message--detail > .sc-message--text {
+  color: #263238;
+  background-color: #dfebf3;
+}
+
+.sc-message--time {
+  margin: 0px 3px;
+  font-weight: 300;
+  font-size: 12px;
+  font-style: italic;
+}
