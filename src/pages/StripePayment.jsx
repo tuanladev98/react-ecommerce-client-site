@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { PaymentElement } from '@stripe/react-stripe-js';
-import { toast } from 'react-toastify';
 
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
@@ -231,10 +229,6 @@ const StripePayment = () => {
           <PaymentContainer>
             <PaymentInfoContainer>
               <PaymentInfoTitle>PAYMENT INFORMATION</PaymentInfoTitle>
-
-              <form>
-                <PaymentElement />
-              </form>
 
               <SubmitPayment>
                 <SubmitButton onClick={handleSubmitPayment}>
