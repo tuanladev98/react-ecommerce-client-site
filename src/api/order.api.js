@@ -30,6 +30,30 @@ const orderApis = {
 
     return result;
   },
+
+  createStripePaymentIntent: (amount) => {
+    const result = createPrivateRequest().post(
+      '/order/create-stripe-payment-intent',
+      {
+        amount,
+        currency: 'vnd',
+        paymentMethodType: 'card',
+      }
+    );
+
+    return result;
+  },
+
+  updateOrderPayment: (orderCode, paymentIntentId) => {
+    const result = createPrivateRequest().put(
+      '/order/update-payment/' + orderCode,
+      {
+        paymentIntentId,
+      }
+    );
+
+    return result;
+  },
 };
 
 export default orderApis;

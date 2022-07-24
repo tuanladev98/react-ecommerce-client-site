@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { toast } from 'react-toastify';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
@@ -9,6 +10,7 @@ import Newsletter from '../components/Newsletter';
 
 import orderApis from '../api/order.api';
 import numberWithCommas from '../utils/numberWithCommas';
+import completeIcon from '../assets/complete-icon.png';
 
 const Container = styled.div``;
 
@@ -40,6 +42,29 @@ const PaymentInfoTitle = styled.div`
   text-align: center;
 `;
 
+const PaymentOrderComplete = styled.div`
+  width: 100%;
+  height: fit-content;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const PaymentForm = styled.form`
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const CardInfo = styled.div`
+  width: 60%;
+  margin: 20px 0px;
+  padding: 10px;
+  border: 1px dashed lightgray;
+`;
+
 const SubmitPayment = styled.div`
   display: flex;
   align-items: center;
@@ -49,18 +74,12 @@ const SubmitPayment = styled.div`
 const SubmitButton = styled.button`
   width: 300px;
   padding: 10px;
-  font-weight: 1000;
-  cursor: pointer;
-  border: 1px solid black;
-  background-color: white;
-  color: black;
+  font-weight: 700;
+  border: none;
   margin-bottom: 10px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: black;
-    color: white;
-  }
+  background-color: ${(props) => (props.disabled ? 'lightgray' : 'black')};
+  color: ${(props) => (props.disabled ? 'black' : 'white')};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `;
 
 const OrderSummaryContainer = styled.div`
@@ -205,18 +224,74 @@ const PaymentMethodItemTitle = styled.span`
 const StripePayment = () => {
   const location = useLocation();
   const orderCode = location.pathname.split('/')[2];
-  const dispatch = useDispatch();
+
+  const elements = useElements();
+  const stripe = useStripe();
 
   const [order, setOrder] = useState(null);
+  const [isComplete, setIsComplete] = useState(false);
+  const [isDisablePayBtn, setIsDisablePayBtn] = useState(false);
 
   useEffect(() => {
     orderApis.getOrderDetail(orderCode).then((result) => {
       setOrder(result.data);
+      setIsComplete(!!result.data.stripeSucceededPaymentIntentId);
     });
   }, [orderCode]);
 
-  const handleSubmitPayment = (e) => {
+  const handleSubmitPayment = async (e) => {
     e.preventDefault();
+
+    if (!stripe || !elements) return;
+
+    setIsDisablePayBtn(true);
+    const toastHandleId = toast.loading('Progress payment...', {
+      position: 'bottom-center',
+    });
+    // create payment intent on the server
+    const { data } = await orderApis.createStripePaymentIntent(order.amount);
+    const { error: errorBackend, clientSecret } = data;
+
+    if (errorBackend) {
+      toast.update(toastHandleId, {
+        render: errorBackend.message,
+        type: 'error',
+        isLoading: false,
+      });
+      return;
+    }
+
+    // confirm payment on the client:
+    const { error: errorStripe, paymentIntent } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      });
+
+    if (errorStripe) {
+      toast.update(toastHandleId, {
+        render: errorStripe.message,
+        type: 'error',
+        isLoading: false,
+      });
+      return;
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+      toast.update(toastHandleId, {
+        render: 'Payment successful!',
+        type: 'success',
+        isLoading: false,
+        autoClose: true,
+      });
+      await orderApis.updateOrderPayment(orderCode, paymentIntent.id);
+      setIsComplete(true);
+    } else {
+      toast.info(paymentIntent.status);
+    }
+
+    setIsDisablePayBtn(false);
   };
 
   return (
@@ -230,11 +305,64 @@ const StripePayment = () => {
             <PaymentInfoContainer>
               <PaymentInfoTitle>PAYMENT INFORMATION</PaymentInfoTitle>
 
-              <SubmitPayment>
-                <SubmitButton onClick={handleSubmitPayment}>
-                  PROGRESS PAYMENT
-                </SubmitButton>
-              </SubmitPayment>
+              {isComplete ? (
+                <PaymentOrderComplete>
+                  <img
+                    style={{ width: '130px', height: '130px', margin: '10px' }}
+                    src={completeIcon}
+                    alt=""
+                  />
+                  <span
+                    style={{
+                      margin: '5px',
+                      fontSize: '20px',
+                      fontWeight: '300',
+                    }}
+                  >
+                    Your order has been paid!
+                  </span>
+                  <button
+                    style={{
+                      width: '200px',
+                      margin: '20px',
+                      padding: '10px',
+                      border: 'none',
+                      backgroundColor: 'black',
+                      color: 'white',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    TRACKING ORDER STATUS
+                  </button>
+                </PaymentOrderComplete>
+              ) : (
+                <PaymentForm onSubmit={handleSubmitPayment}>
+                  <div style={{ fontSize: '17px', fontStyle: 'italic' }}>
+                    <span>
+                      *You may be redirected to your bank's secure 3D process to
+                      authenticate your information.
+                    </span>
+                  </div>
+                  <CardInfo>
+                    <CardElement
+                      options={{
+                        hidePostalCode: true,
+                        style: { base: { fontSize: '18px' } },
+                      }}
+                    />
+                  </CardInfo>
+
+                  <SubmitPayment>
+                    <SubmitButton
+                      type="submit"
+                      disabled={!stripe || !elements || isDisablePayBtn}
+                    >
+                      PROGRESS PAYMENT
+                    </SubmitButton>
+                  </SubmitPayment>
+                </PaymentForm>
+              )}
             </PaymentInfoContainer>
 
             <OrderSummaryContainer>
