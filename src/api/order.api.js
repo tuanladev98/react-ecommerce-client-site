@@ -31,6 +31,12 @@ const orderApis = {
     return result;
   },
 
+  getOrderHistory: () => {
+    const result = createPrivateRequest().get('/order/order-history');
+
+    return result;
+  },
+
   createStripePaymentIntent: (amount) => {
     const result = createPrivateRequest().post(
       '/order/create-stripe-payment-intent',

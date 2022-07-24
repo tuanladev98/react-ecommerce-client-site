@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
@@ -235,7 +235,8 @@ const StripePayment = () => {
   useEffect(() => {
     orderApis.getOrderDetail(orderCode).then((result) => {
       setOrder(result.data);
-      setIsComplete(!!result.data.stripeSucceededPaymentIntentId);
+      if (result.data)
+        setIsComplete(!!result.data.stripeSucceededPaymentIntentId);
     });
   }, [orderCode]);
 
@@ -321,20 +322,22 @@ const StripePayment = () => {
                   >
                     Your order has been paid!
                   </span>
-                  <button
-                    style={{
-                      width: '200px',
-                      margin: '20px',
-                      padding: '10px',
-                      border: 'none',
-                      backgroundColor: 'black',
-                      color: 'white',
-                      fontWeight: '500',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    TRACKING ORDER STATUS
-                  </button>
+                  <Link to={'/tracking-order/' + orderCode}>
+                    <button
+                      style={{
+                        width: '200px',
+                        margin: '20px',
+                        padding: '10px',
+                        border: 'none',
+                        backgroundColor: 'black',
+                        color: 'white',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      TRACKING ORDER STATUS
+                    </button>
+                  </Link>
                 </PaymentOrderComplete>
               ) : (
                 <PaymentForm onSubmit={handleSubmitPayment}>

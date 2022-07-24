@@ -13,6 +13,8 @@ import Shop from './pages/Shop';
 import Register from './pages/Register';
 import Checkout from './pages/Checkout';
 import StripePayment from './pages/StripePayment';
+import OrderHistory from './pages/OrderHistory';
+import TrackingOrder from './pages/TrackingOrder';
 
 import ChatWidget from './components/chat/chat-widget/ChatWidget';
 
@@ -40,6 +42,12 @@ const App = () => {
           </Route>
           <Route path="/payment/:orderCode">
             {!CURRENT_USER ? <Redirect to="/login" /> : <StripePayment />}
+          </Route>
+          <Route path="/order-history">
+            {!CURRENT_USER ? <Redirect to="/login" /> : <OrderHistory />}
+          </Route>
+          <Route path="/tracking-order">
+            {!CURRENT_USER ? <Redirect to="/login" /> : <TrackingOrder />}
           </Route>
           <Route path="/login">
             {CURRENT_USER ? <Redirect to="/" /> : <Login />}

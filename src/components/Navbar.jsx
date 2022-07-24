@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import {
-  ExitToAppOutlined,
+  History,
+  MeetingRoom,
   Search,
+  ShoppingCart,
   ShoppingCartOutlined,
 } from '@material-ui/icons';
 import { Badge } from '@material-ui/core';
@@ -140,21 +142,28 @@ const Navbar = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
+                window.location.href = '/cart';
+              }}
+            >
+              <Badge badgeContent={cartItems.length} color="error">
+                <ShoppingCart />
+              </Badge>
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href = '/order-history';
+              }}
+            >
+              <History />
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
                 dispatch(logout());
                 dispatch(changeCartItems([]));
                 window.location.href = '/';
               }}
             >
-              <ExitToAppOutlined />
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                window.location.href = '/cart';
-              }}
-            >
-              <Badge badgeContent={cartItems.length} color="error">
-                <ShoppingCartOutlined />
-              </Badge>
+              <MeetingRoom />
             </MenuItem>
           </Right>
         )}
