@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 import authApis from '../api/auth.api';
+import userApis from '../api/user.api';
 import { loginFailure, loginStart, loginSuccess } from '../redux/user_slice';
 
 const Container = styled.div`
@@ -98,6 +99,7 @@ const Login = () => {
         try {
           const loginResult = await authApis.login(email, password);
           dispatch(loginSuccess(loginResult.data));
+          await userApis.addLog('LOGIN');
           window.location.href = '/';
         } catch (error) {
           const { statusCode, message } = error.response.data;
