@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import {
+  Favorite,
   FavoriteBorderOutlined,
   ShoppingCartOutlined,
 } from '@material-ui/icons';
 
 import numberWithCommas from '../utils/numberWithCommas';
 import formatGenderUtil from '../utils/format_gender';
+import { toast } from 'react-toastify';
+import productApis from '../api/product.api';
 
 const ActionContainer = styled.div`
   opacity: 0;
@@ -90,6 +94,24 @@ const CategoryTitle = styled.div`
 `;
 
 const ProductCard = ({ productData }) => {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+  const [isFavorite, setIsFavorite] = useState(!!productData.isFavorite);
+
+  const toggleFavoriteStatus = (e) => {
+    e.preventDefault();
+    if (!currentUser) {
+      toast.info('Please login or sign up account!');
+    } else {
+      productApis
+        .toggleFavoriteStatus(productData.id)
+        .then((result) => {
+          setIsFavorite(result.data.isFavorite);
+        })
+        .catch((error) => toast.error('Something went wrong!'));
+    }
+  };
+
   return (
     <Container>
       <ImageContainer>
@@ -99,8 +121,7 @@ const ProductCard = ({ productData }) => {
         <Price>{numberWithCommas(productData.price)}₫</Price>
         <Title>{productData.productName}</Title>
         <CategoryTitle>
-          {formatGenderUtil(productData.gender)}{' '}
-          {productData.category.categoryName}
+          {formatGenderUtil(productData.gender)} {productData.categoryName}
         </CategoryTitle>
       </InfoContainer>
       <ActionContainer>
@@ -111,8 +132,8 @@ const ProductCard = ({ productData }) => {
             }}
           />
         </Icon>
-        <Icon>
-          <FavoriteBorderOutlined />
+        <Icon onClick={toggleFavoriteStatus}>
+          {isFavorite ? <Favorite /> : <FavoriteBorderOutlined />}
         </Icon>
       </ActionContainer>
     </Container>

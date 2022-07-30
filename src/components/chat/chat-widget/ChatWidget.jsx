@@ -120,7 +120,7 @@ const ChatWidget = () => {
         <div className="sc-message-list">
           {messages.map((message) => {
             return (
-              <div className="sc-message">
+              <div className="sc-message" key={message.id}>
                 <div
                   className={[
                     'sc-message--content',

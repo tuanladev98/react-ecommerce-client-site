@@ -13,13 +13,16 @@ const Container = styled.div`
 `;
 
 const PopularProducts = () => {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const userId = currentUser && currentUser && currentUser.userInfo.id;
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    productApis.getPopularProduct().then((result) => {
+    productApis.getPopularProduct(userId).then((result) => {
       setProducts(result.data);
     });
-  }, []);
+  }, [userId]);
 
   return (
     <Container>

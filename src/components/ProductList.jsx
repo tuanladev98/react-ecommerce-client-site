@@ -13,15 +13,18 @@ const Container = styled.div`
 `;
 
 const ProductList = ({ filters, sort }) => {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const userId = currentUser && currentUser && currentUser.userInfo.id;
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     productApis
-      .filterProduct(filters.category, filters.gender, sort)
+      .filterProduct(filters.category, filters.gender, sort, userId)
       .then((result) => {
         setProducts(result.data);
       });
-  }, [filters, sort]);
+  }, [filters, sort, userId]);
 
   return (
     <Container>

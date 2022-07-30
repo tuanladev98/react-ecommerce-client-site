@@ -1,22 +1,29 @@
-import { createPublicRequest } from './axios_client';
+import { createPrivateRequest, createPublicRequest } from './axios_client';
 
 const productApis = {
-  filterProduct: (categoryId, gender, sort) => {
+  filterProduct: (categoryId, gender, sort, userId) => {
     return createPublicRequest().get('/product/filter', {
       params: {
         categoryId,
         gender,
         sort,
+        userId,
       },
     });
   },
 
-  getPopularProduct: () => {
-    return createPublicRequest().get('/product/popular');
+  getPopularProduct: (userId) => {
+    return createPublicRequest().get('/product/popular', {
+      params: { userId },
+    });
   },
 
   getOne: (code) => {
     return createPublicRequest().get(`/product/find/${code}`);
+  },
+
+  toggleFavoriteStatus: (productId) => {
+    return createPrivateRequest().put(`/product/toggle-favorite/${productId}`);
   },
 };
 
