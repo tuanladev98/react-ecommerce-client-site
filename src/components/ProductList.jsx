@@ -20,7 +20,13 @@ const ProductList = ({ filters, sort }) => {
 
   useEffect(() => {
     productApis
-      .filterProduct(filters.category, filters.gender, sort, userId)
+      .filterProduct(
+        filters.keyword,
+        filters.category,
+        filters.gender,
+        sort,
+        userId
+      )
       .then((result) => {
         setProducts(result.data);
       });

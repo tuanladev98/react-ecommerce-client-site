@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const genders = [
@@ -66,6 +65,10 @@ const Button = styled.button`
 `;
 
 const GenderBrand = () => {
+  const handleClickGender = (gender) => {
+    window.location.href = '/shop?gender=' + gender.value;
+  };
+
   return (
     <Container>
       {genders.map((gender, index) => (
@@ -73,13 +76,7 @@ const GenderBrand = () => {
           <Image src={gender.img} />
           <Info>
             <Title>{gender.display}</Title>
-            <Link
-              to={{
-                pathname: '/shop',
-              }}
-            >
-              <Button>SHOW NOW</Button>
-            </Link>
+            <Button onClick={() => handleClickGender(gender)}>SHOW NOW</Button>
           </Info>
         </GenderItem>
       ))}

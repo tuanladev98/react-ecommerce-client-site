@@ -7,6 +7,7 @@ import Newsletter from '../components/Newsletter';
 import ProductList from '../components/ProductList';
 
 import categoryApis from '../api/category.api';
+import { useLocation } from 'react-router-dom';
 
 const Container = styled.div``;
 
@@ -37,9 +38,24 @@ const FilterSelect = styled.select`
 const FilterSelectOption = styled.option``;
 
 const Shop = () => {
+  const location = useLocation();
+  const initial = location.search
+    .slice(1)
+    .split('&')
+    .reduce((pre, curr) => {
+      const [key, value] = curr.split('=');
+      if (['keyword', 'category', 'gender', 'sort'].includes(key))
+        return { ...pre, [key]: value };
+      else return pre;
+    }, {});
+
   const [categories, setCategories] = useState([]);
-  const [filters, setFilters] = useState({});
-  const [sort, setSort] = useState('NEWEST');
+  const [filters, setFilters] = useState({
+    keyword: initial.keyword,
+    category: initial.category,
+    gender: initial.gender,
+  });
+  const [sort, setSort] = useState(initial.sort);
 
   useEffect(() => {
     categoryApis.getAllCategory().then((result) => {
@@ -63,11 +79,17 @@ const Shop = () => {
   return (
     <Container>
       <Navbar />
-      <Title>Shoes</Title>
+      <Title>
+        {filters.keyword ? `Result for: ${filters.keyword}` : 'Shop'}
+      </Title>
       <FilterContainer>
         <Filter>
           <FilterText>Filter products:</FilterText>
-          <FilterSelect name="category" onChange={handleFilters}>
+          <FilterSelect
+            name="category"
+            onChange={handleFilters}
+            value={filters.category}
+          >
             <FilterSelectOption disabled selected>
               Categories
             </FilterSelectOption>
@@ -80,7 +102,11 @@ const Shop = () => {
             })}
           </FilterSelect>
 
-          <FilterSelect name="gender" onChange={handleFilters}>
+          <FilterSelect
+            name="gender"
+            onChange={handleFilters}
+            value={filters.gender}
+          >
             <FilterSelectOption disabled selected>
               Genders
             </FilterSelectOption>
@@ -93,7 +119,7 @@ const Shop = () => {
 
         <Filter>
           <FilterText>Sort products:</FilterText>
-          <FilterSelect name="sort" onChange={handleSort}>
+          <FilterSelect name="sort" onChange={handleSort} value={sort}>
             <FilterSelectOption disabled selected>
               Sort
             </FilterSelectOption>

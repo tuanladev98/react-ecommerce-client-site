@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   History,
@@ -32,10 +32,10 @@ const Left = styled.div`
   align-items: center;
 `;
 
-const Language = styled.span`
-  font-size: 14px;
-  cursor: pointer;
-`;
+// const Language = styled.span`
+//   font-size: 14px;
+//   cursor: pointer;
+// `;
 
 const SearchContainer = styled.div`
   border: 0.5px solid lightgray;
@@ -91,6 +91,8 @@ const Navbar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
 
+  const [keyword, setKeyword] = useState(null);
+
   useEffect(() => {
     if (currentUser)
       cartApis.getCart().then((result) => {
@@ -98,14 +100,26 @@ const Navbar = () => {
       });
   }, [currentUser, dispatch]);
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!keyword) return;
+    else window.location.href = `/shop?keyword=${keyword}`;
+  };
+
   return (
     <Container>
       <Wrapper>
         <Left>
-          <Language>Search:</Language>
+          {/* <Language>Search:</Language> */}
           <SearchContainer>
-            <Input placeholder="Search ..." />
-            <Search style={{ color: 'gray', fontSize: '16px' }} />
+            <Input
+              placeholder="Search ..."
+              onChange={(e) => setKeyword(e.target.value)}
+            />
+            <Search
+              style={{ color: 'gray', fontSize: '16px' }}
+              onClick={handleSearch}
+            />
           </SearchContainer>
         </Left>
         <Center>
