@@ -31,20 +31,20 @@
 }
 
 .sc-message--detail {
+  max-width: calc(100% - 90px);
   display: flex;
   flex-direction: column;
-  width: calc(100% - 90px);
 }
 
-.sc-message--content.sent .sc-message--detail {
+/* .sc-message--content.sent .sc-message--detail {
   max-width: calc(100% - 120px);
   align-items: flex-end;
-}
+} */
 
-.sc-message--content.received .sc-message--detail {
+/* .sc-message--content.received .sc-message--detail {
   width: fit-content;
   margin-right: 40px;
-}
+} */
 
 .sc-message--text {
   padding: 17px 20px;

@@ -26,6 +26,14 @@ const productApis = {
   toggleFavoriteStatus: (productId) => {
     return createPrivateRequest().put(`/product/toggle-favorite/${productId}`);
   },
+
+  reviewProduct: (data) => {
+    return createPublicRequest().post('/product/review', data);
+  },
+
+  getReviews: (productId) => {
+    return createPublicRequest().get('/product/review/' + productId);
+  },
 };
 
 export default productApis;

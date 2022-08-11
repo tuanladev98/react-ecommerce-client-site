@@ -124,7 +124,7 @@ const Navbar = () => {
         </Left>
         <Center>
           <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
-            <Logo>...</Logo>
+            <Logo>LOGO</Logo>
           </Link>
         </Center>
         {!currentUser ? (

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import RatingStars from 'react-rating-stars-component';
 
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
@@ -15,6 +16,7 @@ import cartApis from '../api/cart.api';
 import { changeCartItems } from '../redux/cart_slice';
 import numberWithCommas from '../utils/numberWithCommas';
 import formatGenderUtil from '../utils/format_gender';
+import dayjs from 'dayjs';
 
 const Container = styled.div``;
 
@@ -49,6 +51,50 @@ const ImagePreview = styled.img`
   width: 500;
   height: 80vh;
   object-fit: cover;
+`;
+
+const ListReviewsContainer = styled.div`
+  margin-top: 40px;
+  padding: 10px;
+  border-top: 1px solid lightgray;
+`;
+
+const AddReviewForm = styled.div`
+  margin-top: 20px;
+  padding: 10px;
+  /* border: 1px dashed black;
+  border-radius: 5px; */
+`;
+
+const InputReviewTitle = styled.input``;
+
+const InputReviewComment = styled.textarea``;
+
+const AddReviewBtn = styled.button``;
+
+const ListReviews = styled.div`
+  margin-top: 20px;
+`;
+
+const Review = styled.div`
+  padding: 10px;
+  border-bottom: 1px dashed lightgray;
+`;
+
+const ReviewTitle = styled.span`
+  font-weight: 700;
+  font-size: 18px;
+`;
+
+const ReviewComment = styled.p`
+  margin-top: 10px;
+`;
+
+const ReviewDate = styled.span`
+  margin-top: 10px;
+  font-weight: 200;
+  font-style: italic;
+  font-size: 14px;
 `;
 
 const InfoContainer = styled.div`
@@ -174,9 +220,15 @@ const ProductDetail = () => {
   const code = location.pathname.split('/')[2];
   const [selectedImgPreview, setSelectedImgPreview] = useState(1);
   const [product, setProduct] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(undefined);
   const dispatch = useDispatch();
+
+  // review state:
+  const [reviewTitle, setReviewTitle] = useState(null);
+  const [reviewRatingPoint, setReviewRatingPoint] = useState(5);
+  const [reviewComment, setReviewComment] = useState(null);
 
   useEffect(() => {
     // scroll to top on page load
@@ -186,6 +238,7 @@ const ProductDetail = () => {
   useEffect(() => {
     productApis.getOne(code).then((result) => {
       setProduct(result.data);
+      setReviews(result.data.reviews);
     });
   }, [code]);
 
@@ -218,6 +271,27 @@ const ProductDetail = () => {
     }
   };
 
+  const ratingChange = (point) => {
+    setReviewRatingPoint(point);
+  };
+
+  const handleAddReview = (e) => {
+    e.preventDefault();
+    productApis
+      .reviewProduct({
+        productId: product.id,
+        title: reviewTitle,
+        ratingPoint: reviewRatingPoint,
+        comment: reviewComment,
+      })
+      .then((result) => {
+        setReviews([result.data, ...reviews]);
+        setReviewTitle(null);
+        setReviewComment(null);
+        toast.success('Add review success!');
+      });
+  };
+
   return (
     <Container>
       <Navbar />
@@ -238,9 +312,59 @@ const ProductDetail = () => {
                 />
               </ImageItem>
             </ListImage>
-            <ImagePreview
-              src={selectedImgPreview === 1 ? product.image01 : product.image02}
-            />
+            <div>
+              <ImagePreview
+                src={
+                  selectedImgPreview === 1 ? product.image01 : product.image02
+                }
+              />
+              <ListReviewsContainer>
+                <h2>Reviews({product.reviews.length}):</h2>
+                <AddReviewForm>
+                  <RatingStars count={5} size={50} onChange={ratingChange} />
+
+                  <div>
+                    <label>Title:</label>
+                    <InputReviewTitle
+                      value={reviewTitle}
+                      placeholder="Enter review title"
+                      onChange={(e) => setReviewTitle(e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                    <label>Comment:</label>
+                    <InputReviewComment
+                      placeholder="Enter comment"
+                      onChange={(e) => setReviewComment(e.target.value)}
+                    ></InputReviewComment>
+                  </div>
+                  <AddReviewBtn onClick={handleAddReview}>Review</AddReviewBtn>
+                </AddReviewForm>
+
+                <ListReviews>
+                  {reviews.map((review) => {
+                    return (
+                      <Review key={review.id}>
+                        <ReviewTitle>{review.title}</ReviewTitle>
+                        <RatingStars
+                          count={5}
+                          size={20}
+                          value={review.ratingPoint}
+                          edit={false}
+                        />
+                        <ReviewComment>{review.comment}</ReviewComment>
+                        <ReviewDate>
+                          {dayjs(review.createdAt).format(
+                            'MMMM DD, YYYY HH:mm'
+                          )}
+                        </ReviewDate>
+                      </Review>
+                    );
+                  })}
+                </ListReviews>
+              </ListReviewsContainer>
+            </div>
           </ImgContainer>
           <InfoContainer>
             <ProductTitle>
